@@ -7,6 +7,9 @@
     "dev": "nodemon ./index.js",
     "ui": "browser-sync start --config bs-config.cjs"
   },
+  "engines": {
+    "node": "16.x"
+  },
   "type": "module",
   "keywords": [],
   "author": "",
