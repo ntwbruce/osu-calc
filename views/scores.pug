@@ -5,12 +5,26 @@ block layout-content
     h1.Banner Delete My Scores
     div.Message
       div.Profile
-        h1 #{userProfile.username}
-
-        h2 Total PP: #{userProfile.total.toFixed(2)}pp
-        h2 Total PP without bonus: #{userProfile.totalnb.toFixed(2)}pp 
-        h2 Bonus PP: #{userProfile.bonus.toFixed(2)}pp 
-        h2 Accuracy: #{userProfile.acc.toFixed(2)}%
+          div.left
+            h1 #{userProfile.username}
+          div.middle
+            h2 Performance
+            h1 #{userProfile.total.toFixed(2)}pp
+            if userProfile.total > userProfile.oriPP
+              h2 (+#{(userProfile.total - userProfile.oriPP).toFixed(2)})
+            else if userProfile.total < userProfile.oriPP
+              h2 (-#{(userProfile.oriPP - userProfile.total).toFixed(2)})
+            else  
+              h2 (+0.00)
+          div.right
+            h2 Accuracy
+            h1 #{userProfile.acc.toFixed(2)}%
+            if userProfile.acc > userProfile.oriacc
+              h2 (+#{(userProfile.acc - userProfile.oriacc).toFixed(2)}%)
+            else if userProfile.acc < userProfile.oriacc
+              h2 (-#{(userProfile.oriacc - userProfile.acc).toFixed(2)}%)
+            else  
+              h2 (+0.00%)
       div.Scores
         table
           thead
@@ -20,7 +34,6 @@ block layout-content
               th.stats accuracy (%)
               th.stats pp
               th.stats delete
-            
           tbody
             each val, index in userProfile.data
               if userProfile.selected[index]

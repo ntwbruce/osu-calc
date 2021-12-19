@@ -110,6 +110,7 @@ a {
 }
 
 .Message > .Profile {
+  display: flex;
   padding-bottom: 20px;
   text-align: center;
 }
@@ -205,4 +206,16 @@ table {
   padding: 15px 32px;
   width: 150px;
   background-color: rgba(241, 49, 87, 0.877);
+}
+
+.left {
+  flex: 0 0 33%
+}
+
+.middle {
+  flex: 0 0 33%
+}
+
+.right {
+  flex: 1
 }

@@ -30,6 +30,9 @@ var __total;
 var __totalnb;
 var __bonus;
 
+var originalAcc;
+var originalPP;
+
 app.post("/scores-init", async (req, res) => {
   try {
     var subId = req.body.osu_id;
@@ -44,6 +47,9 @@ app.post("/scores-init", async (req, res) => {
     __totalnb = profile.totalPPNoBonus;
     __bonus = profile.bonusPP;
 
+    originalAcc = __acc;
+    originalPP = __total;
+
     res.render("scores", { title: "Delete My Scores",
       userProfile: { 
         username: __username, 
@@ -52,7 +58,9 @@ app.post("/scores-init", async (req, res) => {
         selected: __selected,
         total: __total,
         totalnb: __totalnb,
-        bonus: __bonus
+        bonus: __bonus,
+        oriacc: originalAcc,
+        oriPP: originalPP
       }
     });
 
@@ -79,7 +87,9 @@ app.post("/scores-updated", async (req, res) => {
         selected: __selected,
         total: __total,
         totalnb: __totalnb,
-        bonus: __bonus
+        bonus: __bonus,
+        oriacc: originalAcc,
+        oriPP: originalPP
       }
     });
 
