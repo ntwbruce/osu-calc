@@ -11,35 +11,38 @@ block layout-content
         h2 Total PP without bonus: #{userProfile.totalnb.toFixed(2)}pp 
         h2 Bonus PP: #{userProfile.bonus.toFixed(2)}pp 
         h2 Accuracy: #{userProfile.acc.toFixed(2)}%
-      table
-        tr
-          th #
-          th.map map
-          th accuracy (%)
-          th pp
-          th delete
-        tbody
-          each val, index in userProfile.data
-            if userProfile.selected[index]
-              tr
-                td #{index + 1}
-                td.map #{val[0]}
-                td #{(Math.round(100 * (100 * val[1] + Number.EPSILON)) / 100).toFixed(2)}
-                td #{(Math.round(100 * (val[2] + Number.EPSILON)) / 100).toFixed(2)}
-                td.button
-                  form(action='/scores-updated', method='POST')
-                    input(type='hidden', name='changeID', value=index)
-                    input(type='submit', name='change', value='delete')
-            else 
-              tr
-                td.removed #{index + 1}
-                td.removedmap #{val[0]}
-                td.removed #{(Math.round(100 * (100 * val[1] + Number.EPSILON)) / 100).toFixed(2)}
-                td.removed #{(Math.round(100 * (val[2] + Number.EPSILON)) / 100).toFixed(2)}
-                td.removedbutton
-                  form(action='/scores-updated', method='POST')
-                    input(type='hidden', name='changeID', value=index)
-                    input(type='submit', name='change', value='undelete')
+      div.Scores
+        table
+          thead
+            tr
+              th #
+              th.map map
+              th.stats accuracy (%)
+              th.stats pp
+              th.stats delete
+            
+          tbody
+            each val, index in userProfile.data
+              if userProfile.selected[index]
+                tr
+                  td.stats #{index + 1}
+                  td.map #{val[0]}
+                  td.stats #{(Math.round(100 * (100 * val[1] + Number.EPSILON)) / 100).toFixed(2)}
+                  td.stats #{(Math.round(100 * (val[2] + Number.EPSILON)) / 100).toFixed(2)}
+                  td.stats
+                    form(action='/scores-updated', method='POST')
+                      input(type='hidden', name='changeID', value=index)
+                      input(type='submit', name='change', value='delete')
+              else 
+                tr
+                  td.removed #{index + 1}
+                  td.removedmap #{val[0]}
+                  td.removed #{(Math.round(100 * (100 * val[1] + Number.EPSILON)) / 100).toFixed(2)}
+                  td.removed #{(Math.round(100 * (val[2] + Number.EPSILON)) / 100).toFixed(2)}
+                  td.removedbutton
+                    form(action='/scores-updated', method='POST')
+                      input(type='hidden', name='changeID', value=index)
+                      input(type='submit', name='change', value='undelete')
 
     div.NavButtons
       a(href="/")
