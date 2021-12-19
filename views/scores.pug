@@ -5,24 +5,33 @@ block layout-content
     h1.Banner Delete My Scores
     div.Message
       div.Profile
-          div.left
+          div.bigstats
             h1 #{userProfile.username}
-          div.middle
+          div.bigstats
+            h2 Rank 
+            h1 #{userProfile.rank}
+            if userProfile.rank < userProfile.oriRank
+              h2.green (+#{userProfile.oriRank - userProfile.rank})
+            else if userProfile.rank > userProfile.oriRank
+              h2.red (-#{userProfile.rank - userProfile.oriRank})
+            else  
+              h2 (+0)
+          div.bigstats
             h2 Performance
             h1 #{userProfile.total.toFixed(2)}pp
             if userProfile.total > userProfile.oriPP
-              h2 (+#{(Math.round(100 * (userProfile.total + Number.EPSILON)) / 100 - Math.round(100 * (userProfile.oriPP + Number.EPSILON)) / 100).toFixed(2)})
+              h2.green (+#{(Math.round(100 * (userProfile.total + Number.EPSILON)) / 100 - Math.round(100 * (userProfile.oriPP + Number.EPSILON)) / 100).toFixed(2)})
             else if userProfile.total < userProfile.oriPP
-              h2 (-#{(Math.round(100 * (userProfile.oriPP + Number.EPSILON)) / 100 - Math.round(100 * (userProfile.total + Number.EPSILON)) / 100).toFixed(2)})
+              h2.red (-#{(Math.round(100 * (userProfile.oriPP + Number.EPSILON)) / 100 - Math.round(100 * (userProfile.total + Number.EPSILON)) / 100).toFixed(2)})
             else  
               h2 (+0.00)
-          div.right
+          div.bigstats
             h2 Accuracy
             h1 #{userProfile.acc.toFixed(2)}%
             if userProfile.acc > userProfile.oriacc
-              h2 (+#{(Math.round(100 * (userProfile.acc + Number.EPSILON)) / 100 - Math.round(100 * (userProfile.oriacc + Number.EPSILON)) / 100).toFixed(2)}%)
+              h2.green (+#{(Math.round(100 * (userProfile.acc + Number.EPSILON)) / 100 - Math.round(100 * (userProfile.oriacc + Number.EPSILON)) / 100).toFixed(2)}%)
             else if userProfile.acc < userProfile.oriacc
-              h2 (-#{(Math.round(100 * (userProfile.oriacc + Number.EPSILON)) / 100 - Math.round(100 * (userProfile.acc + Number.EPSILON)) / 100).toFixed(2)}%)
+              h2.red (-#{(Math.round(100 * (userProfile.oriacc + Number.EPSILON)) / 100 - Math.round(100 * (userProfile.acc + Number.EPSILON)) / 100).toFixed(2)}%)
             else  
               h2 (+0.00%)
       div.Scores
