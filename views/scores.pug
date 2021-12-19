@@ -4,16 +4,18 @@ block layout-content
   div.View.UserView
     h1.Banner Delete My Scores
     div.Message
-      div.Title
+      div.Profile
         h1 #{userProfile.username}
 
-        h2 Total PP: #{userProfile.total}pp
-        h2 Total PP without bonus: #{userProfile.totalnb}pp 
-        h2 Bonus PP: #{userProfile.bonus}pp 
+        h2 Total PP: #{userProfile.total.toFixed(2)}pp
+        h2 Total PP without bonus: #{userProfile.totalnb.toFixed(2)}pp 
+        h2 Bonus PP: #{userProfile.bonus.toFixed(2)}pp 
+        h2 Accuracy: #{userProfile.acc.toFixed(2)}%
       table
         tr
           th #
           th.map map
+          th accuracy (%)
           th pp
           th delete
         tbody
@@ -22,7 +24,8 @@ block layout-content
               tr
                 td #{index + 1}
                 td.map #{val[0]}
-                td #{val[1]}
+                td #{Math.round(100 * (100 * val[1] + Number.EPSILON)) / 100}
+                td #{val[2]}
                 td.button
                   form(action='/scores-updated', method='POST')
                     input(type='hidden', name='changeID', value=index)
@@ -31,7 +34,8 @@ block layout-content
               tr
                 td.removed #{index + 1}
                 td.removedmap #{val[0]}
-                td.removed #{val[1]}
+                td.removed #{Math.round(100 * (100 * val[1] + Number.EPSILON)) / 100}
+                td.removed #{val[2]}
                 td.removedbutton
                   form(action='/scores-updated', method='POST')
                     input(type='hidden', name='changeID', value=index)

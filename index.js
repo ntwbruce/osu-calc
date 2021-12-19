@@ -1,7 +1,7 @@
 import express from 'express';
 import path from 'path';
 import bodyParser from 'body-parser';
-import { getProfile, ppCalc } from './scores.js';
+import { getProfile, ppCalc, accCalc } from './scores.js';
 
 const app = express();
 const port = process.env.PORT || "8000";
@@ -22,7 +22,8 @@ app.get("/", (req, res) => {
 });
 
 var __username;
-var __limit;
+var __acc;
+var __factor;
 var __data;
 var __selected;
 var __total;
@@ -35,7 +36,8 @@ app.post("/scores-init", async (req, res) => {
     var profile = await getProfile(subId);
 
     __username = profile.username;
-    __limit = profile.SCORE_LIMIT; 
+    __acc = profile.userAcc;
+    __factor = profile.accFactor;
     __data = profile.scores;
     __selected = profile.selected;
     __total = profile.totalPP;
@@ -45,7 +47,7 @@ app.post("/scores-init", async (req, res) => {
     res.render("scores", { title: "Delete My Scores",
       userProfile: { 
         username: __username, 
-        limit: __limit, 
+        acc: __acc,
         data: __data,
         selected: __selected,
         total: __total,
@@ -65,13 +67,14 @@ app.post("/scores-updated", async (req, res) => {
     var changeID = req.body.changeID;
     var change = req.body.change;
     __selected[changeID] = !(change === 'delete');
+    __acc = accCalc(__data, __selected, __factor);
     __totalnb = ppCalc(__data, __selected);
     __total = __totalnb + __bonus;
 
     res.render("scores", { title: "Delete My Scores",
       userProfile: { 
         username: __username, 
-        limit: __limit, 
+        acc: __acc,
         data: __data,
         selected: __selected,
         total: __total,
@@ -85,4 +88,3 @@ app.post("/scores-updated", async (req, res) => {
     res.sendStatus(500);
   }
 });
-
