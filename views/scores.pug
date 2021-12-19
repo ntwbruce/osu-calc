@@ -24,8 +24,8 @@ block layout-content
               tr
                 td #{index + 1}
                 td.map #{val[0]}
-                td #{Math.round(100 * (100 * val[1] + Number.EPSILON)) / 100}
-                td #{val[2]}
+                td #{(Math.round(100 * (100 * val[1] + Number.EPSILON)) / 100).toFixed(2)}
+                td #{(Math.round(100 * (val[2] + Number.EPSILON)) / 100).toFixed(2)}
                 td.button
                   form(action='/scores-updated', method='POST')
                     input(type='hidden', name='changeID', value=index)
@@ -34,8 +34,8 @@ block layout-content
               tr
                 td.removed #{index + 1}
                 td.removedmap #{val[0]}
-                td.removed #{Math.round(100 * (100 * val[1] + Number.EPSILON)) / 100}
-                td.removed #{val[2]}
+                td.removed #{(Math.round(100 * (100 * val[1] + Number.EPSILON)) / 100).toFixed(2)}
+                td.removed #{(Math.round(100 * (val[2] + Number.EPSILON)) / 100).toFixed(2)}
                 td.removedbutton
                   form(action='/scores-updated', method='POST')
                     input(type='hidden', name='changeID', value=index)
