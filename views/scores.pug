@@ -11,18 +11,18 @@ block layout-content
             h2 Performance
             h1 #{userProfile.total.toFixed(2)}pp
             if userProfile.total > userProfile.oriPP
-              h2 (+#{(userProfile.total - userProfile.oriPP).toFixed(2)})
+              h2 (+#{(Math.round(100 * (userProfile.total + Number.EPSILON)) / 100 - Math.round(100 * (userProfile.oriPP + Number.EPSILON)) / 100).toFixed(2)})
             else if userProfile.total < userProfile.oriPP
-              h2 (-#{(userProfile.oriPP - userProfile.total).toFixed(2)})
+              h2 (-#{(Math.round(100 * (userProfile.oriPP + Number.EPSILON)) / 100 - Math.round(100 * (userProfile.total + Number.EPSILON)) / 100).toFixed(2)})
             else  
               h2 (+0.00)
           div.right
             h2 Accuracy
             h1 #{userProfile.acc.toFixed(2)}%
             if userProfile.acc > userProfile.oriacc
-              h2 (+#{(userProfile.acc - userProfile.oriacc).toFixed(2)}%)
+              h2 (+#{(Math.round(100 * (userProfile.acc + Number.EPSILON)) / 100 - Math.round(100 * (userProfile.oriacc + Number.EPSILON)) / 100).toFixed(2)}%)
             else if userProfile.acc < userProfile.oriacc
-              h2 (-#{(userProfile.oriacc - userProfile.acc).toFixed(2)}%)
+              h2 (-#{(Math.round(100 * (userProfile.oriacc + Number.EPSILON)) / 100 - Math.round(100 * (userProfile.acc + Number.EPSILON)) / 100).toFixed(2)}%)
             else  
               h2 (+0.00%)
       div.Scores
