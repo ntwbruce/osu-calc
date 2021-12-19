@@ -109,6 +109,11 @@ a {
   padding-bottom: 20px;
 }
 
+.Message > .Profile {
+  padding-bottom: 20px;
+  text-align: center;
+}
+
 .Message > .Details {
   display: flex;
   flex-direction: column;
