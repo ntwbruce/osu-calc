@@ -2,7 +2,7 @@ import express from 'express';
 import path from 'path';
 import bodyParser from 'body-parser';
 import { getProfile, ppCalc, accCalc } from './scores.js';
-import { getRankingData } from './ranking.js';
+import { getRankingData, rankCalc } from './ranking.js';
 
 const app = express();
 const port = process.env.PORT || "8000";
@@ -27,6 +27,7 @@ app.get("/", async (req, res) => {
 
 var __username;
 var __acc;
+var __rank;
 var __factor;
 var __data;
 var __selected;
@@ -36,6 +37,7 @@ var __bonus;
 
 var originalAcc;
 var originalPP;
+var originalRank;
 
 app.post("/scores-init", async (req, res) => {
   try {
@@ -44,6 +46,7 @@ app.post("/scores-init", async (req, res) => {
 
     __username = profile.username;
     __acc = profile.userAcc;
+    __rank = profile.userRank;
     __factor = profile.accFactor;
     __data = profile.scores;
     __selected = profile.selected;
@@ -53,18 +56,21 @@ app.post("/scores-init", async (req, res) => {
 
     originalAcc = __acc;
     originalPP = __total;
+    originalRank = __rank;
 
     res.render("scores", { title: "Delete My Scores",
       userProfile: { 
         username: __username, 
         acc: __acc,
+        rank: __rank,
         data: __data,
         selected: __selected,
         total: __total,
         totalnb: __totalnb,
         bonus: __bonus,
         oriacc: originalAcc,
-        oriPP: originalPP
+        oriPP: originalPP,
+        oriRank: originalRank
       }
     });
 
@@ -82,18 +88,25 @@ app.post("/scores-updated", async (req, res) => {
     __acc = accCalc(__data, __selected, __factor);
     __totalnb = ppCalc(__data, __selected);
     __total = __totalnb + __bonus;
+    if (__total === originalPP) {
+      __rank = originalRank;
+    } else {
+      __rank = rankCalc(rankingData, __total);
+    }
 
     res.render("scores", { title: "Delete My Scores",
       userProfile: { 
         username: __username, 
         acc: __acc,
+        rank: __rank,
         data: __data,
         selected: __selected,
         total: __total,
         totalnb: __totalnb,
         bonus: __bonus,
         oriacc: originalAcc,
-        oriPP: originalPP
+        oriPP: originalPP,
+        oriRank: originalRank
       }
     });
 

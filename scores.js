@@ -31,6 +31,7 @@ export async function getProfile(osu_id) {
   // Get username and profile accuracy from user data
   const username = userData.username;
   const userAcc = userData.statistics.hit_accuracy;
+  const userRank = userData.statistics.global_rank;
 
   // Get data of user's 100 best scores
   const scoresUrl = `${API_URL}/users/${osu_id}/scores/best?mode=osu&limit=${SCORE_LIMIT}`;
@@ -62,7 +63,7 @@ export async function getProfile(osu_id) {
   const totalPP = userData.statistics.pp;
   const bonusPP = totalPP - totalPPNoBonus;
   
-  return {username, userAcc, accFactor, scores, selected, totalPP, totalPPNoBonus, bonusPP};
+  return {username, userAcc, userRank, accFactor, scores, selected, totalPP, totalPPNoBonus, bonusPP};
   
 }
 
