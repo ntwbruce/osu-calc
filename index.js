@@ -2,6 +2,7 @@ import express from 'express';
 import path from 'path';
 import bodyParser from 'body-parser';
 import { getProfile, ppCalc, accCalc } from './scores.js';
+import { getRankingData } from './ranking.js';
 
 const app = express();
 const port = process.env.PORT || "8000";
@@ -17,7 +18,10 @@ app.listen(port, () => {
   console.log(`Listening to requests on http://localhost:${port}`);
 });
 
-app.get("/", (req, res) => {
+var rankingData;
+
+app.get("/", async (req, res) => {
+  rankingData = await getRankingData();
   res.render("index", { title: "dumb osu! calculator and shit" });
 });
 
