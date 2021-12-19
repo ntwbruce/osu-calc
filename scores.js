@@ -1,36 +1,10 @@
 import fetch from "node-fetch";
 import dotenv from "dotenv";
+import { get_token } from "./token.js";
 dotenv.config();
 
 const API_URL = 'https://osu.ppy.sh/api/v2';
-const TOKEN_URL = 'https://osu.ppy.sh/oauth/token';
 const SCORE_LIMIT = 100;
-
-/**
- * Gets OAuth token from osu.ppy.sh.
- *
- * @returns String representing API access token.
- */
-async function get_token() {
-  const body = {
-    'client_id': process.env.CLIENT_ID,
-    'client_secret': process.env.CLIENT_SECRET,
-    'grant_type': 'client_credentials',
-    'scope': 'public'
-  };
-
-  const response = await fetch(TOKEN_URL, {
-    method: 'post',
-    body: JSON.stringify(body),
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json'
-    }
-  });
-
-  const data = await response.json();
-  return data.access_token;
-}
 
 /**
  * Obtains details of profile with specified ID required for subsequent calculations.
