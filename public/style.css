@@ -114,8 +114,19 @@ a {
 .Message > .Profile {
   display: flex;
   text-align: center;
-  width: 1749px;
-  height: 250px;
+}
+
+.Profile > .ProfileBottom {
+  display: flex;
+  text-align: center;
+  width: 100%;
+}
+
+.Profile > .ProfileTop {
+  display: flex;
+  text-align: center;
+  margin-left: -100%;
+  width: 100%;
 }
 
 .Message > .Details {
@@ -239,17 +250,13 @@ table {
   color: white;
 }
 
-.Profile > .opacity {
+.ProfileTop > .opacity {
   display: flex;
   background-color: rgba(0, 0, 0, 0.6);
-  width: 1749px;
-  height: 250px;
   padding-bottom: 20px;
-  position: absolute;
+  width: 100%;
 }
 
 .cover {
   object-fit: cover;
-  width: 1749px;
-  height: 250px;
 }
