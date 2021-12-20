@@ -69,9 +69,11 @@ block layout-content
                   td.removed #{(Math.round(100 * (val[2] + Number.EPSILON)) / 100).toFixed(2)}
                   td.removedbutton
                     form(action='/scores-updated', method='POST')
-                      input(type='hidden', name='changeID', value=index)
-                      input(type='submit', name='change', value='undelete')
+                        input(type='hidden', name='changeID', value=index)
+                        input(type='submit', name='change', value='undelete')
 
     div.NavButtons
       a(href="/")
         div.NavButton Try another profile
+      a(href="/")
+        div.NavButton Details about calculations (TBU)

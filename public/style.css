@@ -145,11 +145,12 @@ a {
 
 .NavButtons {
   display: flex;
-  width: 100%;
+  width: 25%;
   justify-content: space-around;
   align-items: center;
   padding: 0 20px;
   margin-top: 15px;
+  align-self: center;
 }
 
 .NavButton {
@@ -211,13 +212,11 @@ table {
 }
 
 .stats {
-  padding: 15px 15px;
-  width: 150px;
+  padding: 15px 10px;
 }
 
 .removedbutton {
-  padding: 15px 32px;
-  width: 150px;
+  padding: 15px 10px;
   background-color: rgba(241, 49, 87, 0.877);
 }
 
@@ -259,4 +258,26 @@ table {
 
 .cover {
   object-fit: cover;
+}
+
+input {
+  align-items: center;
+
+  height: 30px;
+  width: 110px;
+
+  border-radius: 10px;
+  padding: 0;
+  margin: 0;
+
+  background: #fa4141;
+
+  font-size: 16px;
+  font-weight: bold;
+  color: white;
+
+  text-transform: capitalize;
+  text-align: center;
+
+  box-shadow: var(--ui-shadow);
 }
