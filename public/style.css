@@ -1,3 +1,5 @@
+/* DON'T LOOK I DON'T KNOW WHAT I'M DOING */
+
 @import url("https://fonts.googleapis.com/css?family=Raleway:800|Merriweather+Sans|Share+Tech+Mono");
 
 :root {
@@ -111,8 +113,9 @@ a {
 
 .Message > .Profile {
   display: flex;
-  padding-bottom: 20px;
   text-align: center;
+  width: 1749px;
+  height: 250px;
 }
 
 .Message > .Details {
@@ -125,7 +128,7 @@ a {
   display: block;
   flex-direction: column;
   overflow-y: scroll;
-  height: 570px;
+  height: 505px;
   line-height: 1.5em;
 }
 
@@ -135,7 +138,7 @@ a {
   justify-content: space-around;
   align-items: center;
   padding: 0 20px;
-  margin-top: 20px;
+  margin-top: 15px;
 }
 
 .NavButton {
@@ -225,13 +228,11 @@ table {
 }
 
 .red {
-  color: red;
-  text-shadow: -1px -1px 0 rgb(255, 255, 255), 1px -1px 0 rgb(255, 255, 255), -1px 1px 0 rgb(255, 255, 255), 1px 1px 0 rgb(255, 255, 255);
+  color: rgb(255, 0, 0);
 }
 
 .green {
-  color: green;
-  text-shadow: -1px -1px 0 rgb(255, 255, 255), 1px -1px 0 rgb(255, 255, 255), -1px 1px 0 rgb(255, 255, 255), 1px 1px 0 rgb(255, 255, 255);
+  color: rgb(0, 255, 0);
 }
 
 .white {
@@ -241,7 +242,14 @@ table {
 .Profile > .opacity {
   display: flex;
   background-color: rgba(0, 0, 0, 0.6);
-  width: 100%;
-  height: 100%;
+  width: 1749px;
+  height: 250px;
   padding-bottom: 20px;
+  position: absolute;
+}
+
+.cover {
+  object-fit: cover;
+  width: 1749px;
+  height: 250px;
 }
