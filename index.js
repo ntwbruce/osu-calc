@@ -93,12 +93,13 @@ app.post("/scores-updated", async (req, res) => {
     var changeID = req.body.changeID;
     var change = req.body.change;
     __selected[changeID] = !(change === 'delete');
-    __acc = accCalc(__data, __selected, __factor);
     __totalnb = ppCalc(__data, __selected);
     __total = __totalnb + __bonus;
     if (__total === originalPP) {
+      __acc = originalAcc;
       __rank = originalRank;
     } else {
+      __acc = accCalc(__data, __selected, __factor);
       __rank = rankCalc(rankingData, __total);
     }
 
