@@ -260,7 +260,7 @@ table {
   object-fit: cover;
 }
 
-input {
+input[type='submit'] {
   align-items: center;
 
   height: 30px;
