@@ -28,6 +28,9 @@ app.get("/", async (req, res) => {
 var __username;
 var __acc;
 var __rank;
+var __photo;
+var __banner;
+
 var __factor;
 var __data;
 var __selected;
@@ -47,6 +50,9 @@ app.post("/scores-init", async (req, res) => {
     __username = profile.username;
     __acc = profile.userAcc;
     __rank = profile.userRank;
+    __photo = profile.userPhoto;
+    __banner = profile.userBanner;
+
     __factor = profile.accFactor;
     __data = profile.scores;
     __selected = profile.selected;
@@ -63,6 +69,8 @@ app.post("/scores-init", async (req, res) => {
         username: __username, 
         acc: __acc,
         rank: __rank,
+        photo: __photo,
+        banner: __banner,
         data: __data,
         selected: __selected,
         total: __total,
@@ -99,6 +107,8 @@ app.post("/scores-updated", async (req, res) => {
         username: __username, 
         acc: __acc,
         rank: __rank,
+        photo: __photo,
+        banner: __banner,
         data: __data,
         selected: __selected,
         total: __total,
