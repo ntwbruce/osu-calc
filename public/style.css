@@ -98,6 +98,15 @@ a {
   box-shadow: var(--ui-shadow);
 }
 
+.MessageFixed {
+  background: white;
+  padding: 30px;
+  border-bottom: var(--ui-shadow-border);
+  box-shadow: var(--ui-shadow);
+  width: 100%;
+  border-radius: 10px;
+}
+
 .Message {
   background: white;
   padding: 30px;
