@@ -51,14 +51,7 @@ export async function getProfile(osu_id) {
   var scores = [];
   var selected = [];
   for (var i = 0; i < SCORE_LIMIT; i++) {
-    scores.push([
-      `${scoreData[i].beatmapset.artist} - ${scoreData[i].beatmapset.title} [${scoreData[i].beatmap.version}]`,
-      scoreData[i].accuracy,
-      scoreData[i].pp,
-      scoreData[i].beatmap.difficulty_rating,
-      scoreData[i].mods,
-      scoreData[i].rank
-    ]);
+    scores.push(scoreParser(scoreData[i]));
     selected[i] = true;
   }
 
@@ -84,7 +77,7 @@ export function ppCalc(scores, selected) {
   var index = 0;
   for (var i = 0; i < SCORE_LIMIT; i++) {
     if (selected[i]) {
-      total += scores[i][2] * Math.pow(0.95, index);
+      total += scores[i].pp * Math.pow(0.95, index);
       index++;
     }
   }
@@ -105,7 +98,7 @@ export function accCalc(scores, selected, factor) {
   var index = 0;
   for (var i = 0; i < SCORE_LIMIT; i++) {
     if (selected[i]) {
-      total += scores[i][1] * Math.pow(0.95, index);
+      total += scores[i].accuracy * Math.pow(0.95, index);
       index++;
     }
   }
@@ -113,8 +106,7 @@ export function accCalc(scores, selected, factor) {
 }
 
 /**
- * Calculates the value for a factor required in the calculation of overall profile accuracy.
- * Detailed explanation here: ///
+ * Calculates the value of a factor required in the calculation of overall profile accuracy.
  * 
  * @param {*} userAcc 
  * @param {*} scores with which overall accuracy is calculated.
@@ -124,8 +116,35 @@ function accFactorCalc(userAcc, scores) {
   var total = 0;
   var index = 0;
   for (var i = 0; i < SCORE_LIMIT; i++) {
-    total += scores[i][1] * Math.pow(0.95, index);
+    total += scores[i].accuracy * Math.pow(0.95, index);
     index++;
   }
   return Math.log(1 - 5 * (total / userAcc)) / Math.log(0.95);
+}
+
+/**
+ * Parses a score and returns an object containing a given score's various values.
+ * @param {*} score whose values are parsed and returned.
+ * @returns an object containing a given score's various values.
+ */
+function scoreParser(score) {
+  const map = `${score.beatmapset.artist} - ${score.beatmapset.title} [${score.beatmap.version}]`;
+  const difficulty = score.beatmap.difficulty_rating;
+
+  var modsString;
+  if (score.mods.length === 0) {
+    modsString = "NM";
+  } else {
+    modsString = score.mods[0];
+    for (var i = 1; i < score.mods.length; i++) {
+      modsString += `, ${score.mods[i]}`
+    }
+  }
+  const mods = modsString;
+
+  const accuracy = score.accuracy;
+  const rank = score.rank;
+  const pp = score.pp;
+
+  return {map, difficulty, mods, accuracy, rank, pp};
 }
