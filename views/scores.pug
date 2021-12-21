@@ -46,7 +46,9 @@ block layout-content
             tr
               th #
               th.map Map
-              th.stats Accuracy (%)
+              th.stats Star Rating
+              th.stats Mods
+              th.stats Accuracy(%) / Rank
               th.stats pp
               th.stats Delete
           tbody
@@ -55,7 +57,12 @@ block layout-content
                 tr
                   td.stats #{index + 1}
                   td.map #{val[0]}
-                  td.stats #{(Math.round(100 * (100 * val[1] + Number.EPSILON)) / 100).toFixed(2)}
+                  td.stats #{val[3]}
+                  if val[4].length === 0
+                    td.stats NM
+                  else
+                    td.stats #{val[4]}
+                  td.stats #{(Math.round(100 * (100 * val[1] + Number.EPSILON)) / 100).toFixed(2)} / #{val[5]}
                   td.stats #{(Math.round(100 * (val[2] + Number.EPSILON)) / 100).toFixed(2)}
                   td.stats
                     form(action='/scores-updated', method='POST')
@@ -63,10 +70,15 @@ block layout-content
                       input(type='submit', name='change', value='delete')
               else 
                 tr
-                  td.removed #{index + 1}
+                  td.removedstats #{index + 1}
                   td.removedmap #{val[0]}
-                  td.removed #{(Math.round(100 * (100 * val[1] + Number.EPSILON)) / 100).toFixed(2)}
-                  td.removed #{(Math.round(100 * (val[2] + Number.EPSILON)) / 100).toFixed(2)}
+                  td.removedstats #{val[3]}
+                  if val[4].length === 0
+                    td.removedstats NM
+                  else
+                    td.removedstats #{val[4]}
+                  td.removedstats #{(Math.round(100 * (100 * val[1] + Number.EPSILON)) / 100).toFixed(2)} / #{val[5]}
+                  td.removedstats #{(Math.round(100 * (val[2] + Number.EPSILON)) / 100).toFixed(2)}
                   td.removedbutton
                     form(action='/scores-updated', method='POST')
                         input(type='hidden', name='changeID', value=index)

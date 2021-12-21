@@ -54,7 +54,10 @@ export async function getProfile(osu_id) {
     scores.push([
       `${scoreData[i].beatmapset.artist} - ${scoreData[i].beatmapset.title} [${scoreData[i].beatmap.version}]`,
       scoreData[i].accuracy,
-      scoreData[i].pp
+      scoreData[i].pp,
+      scoreData[i].beatmap.difficulty_rating,
+      scoreData[i].mods,
+      scoreData[i].rank
     ]);
     selected[i] = true;
   }
