@@ -37,7 +37,7 @@ Not much can be done to mitigate this issue at this time.
 
 The best way to calculate overall accuracy was annoying to figure out for a number of reasons, the main one being that the osu! website does not give a specific formula, like for performance points. I did eventually manage to find [this](https://www.reddit.com/r/osugame/comments/ahdnre/comment/eedrmjl/?utm_source=share&utm_medium=web2x&context=3) comment by Magnus Cosmos on r/osugame who explains that the formula used to calculate overall accuracy is this: 
 
-![Overall\ accuracy= (\frac{100}{20 * (1 - 0.95^{N})}) * \sum_{i=1}^{n} [(accuracy\ of\ i^{th}\ top\ score)\ *\ 0.95^{i - 1}],\\n = number\ of\ plays\ used\ to\ calculate\ overall\ accuracy\\N = number\ of\ ranked\ scores\ by\ player](https://latex.codecogs.com/svg.latex?Overall%5C%20accuracy%3D%20%28%5Cfrac%7B100%7D%7B20%20%2A%20%281%20-%200.95%5E%7BN%7D%29%7D%29%20%2A%20%5Csum_%7Bi%3D1%7D%5E%7Bn%7D%20%5B%28accuracy%5C%20of%5C%20i%5E%7Bth%7D%5C%20top%5C%20score%29%5C%20%2A%5C%200.95%5E%7Bi%20-%201%7D%5D%2C%5C%5Cn%20%3D%20number%5C%20of%5C%20plays%5C%20used%5C%20to%5C%20calculate%5C%20overall%5C%20accuracy%5C%5CN%20%3D%20number%5C%20of%5C%20ranked%5C%20scores%5C%20by%5C%20player)
+![Overall\ accuracy= (\frac{100}{20 * (1 - 0.95^{N})}) * \sum_{i=1}^{n} [(accuracy\ of\ i^{th}\ top\ score)\ *\ 0.95^{i - 1}],\\n = number\ of\ plays\ used\ to\ calculate\ overall\ accuracy\\N = number\ of\ ranked\ maps\ with\ scores\ set\ by\ player](https://latex.codecogs.com/svg.latex?Overall%5C%20accuracy%3D%20%28%5Cfrac%7B100%7D%7B20%20%2A%20%281%20-%200.95%5E%7BN%7D%29%7D%29%20%2A%20%5Csum_%7Bi%3D1%7D%5E%7Bn%7D%20%5B%28accuracy%5C%20of%5C%20i%5E%7Bth%7D%5C%20top%5C%20score%29%5C%20%2A%5C%200.95%5E%7Bi%20-%201%7D%5D%2C%5C%5Cn%20%3D%20number%5C%20of%5C%20plays%5C%20used%5C%20to%5C%20calculate%5C%20overall%5C%20accuracy%5C%5CN%20%3D%20number%5C%20of%5C%20ranked%5C%20maps%5C%20with%5C%20scores%5C%20set%5C%20by%5C%20player)
 
 The comment also gives a link to the exact line in the osu! source code that he referenced, so check that out if you want to. 
 
@@ -100,7 +100,7 @@ If you have any questions about/suggestions for/issues with the current implemen
 
 ## Appendix: Accuracy calculations
 
-We will calculate three values of N using the three different methods mentioned above in the section for calculating overall accuracy. We will refer to them as N<sub>1</sub>, N<sub>2</sub> and N<sub>3</sub> in the same order as above. For the purpose of demonstration, the following values used here were obtained from my profile at 24 December 2021, 03:00AM UTC+8:
+We will calculate three values of N (number of ranked maps with scores set by player) using the three different methods mentioned above in the section for calculating overall accuracy. We will refer to them as N<sub>1</sub>, N<sub>2</sub> and N<sub>3</sub> in the same order as above. For the purpose of demonstration, the following values used here were obtained from my profile at 24 December 2021, 03:00AM UTC+8:
 
 Total pp: 5105.28<br>
 Overall accuracy: 96.8531<br>
@@ -114,12 +114,12 @@ Total raw pp: 4674.66632<br>
 Bonus pp: 340.61368<br>
 
 Working backwards to find N with [this](https://osu.ppy.sh/wiki/en/Performance_points#how-much-bonus-pp-is-awarded-for-having-lots-of-scores-on-ranked-maps?) formula:<br><br>
-![Bonus\ pp = 416.6667 * (1 - 0.9994^{N}),\ N = number\ of\ ranked\ maps\ played ](https://latex.codecogs.com/svg.latex?Bonus%5C%20pp%20%3D%20416.6667%20%2A%20%281%20-%200.9994%5E%7BN%7D%29%2C%5C%20N%20%3D%20number%5C%20of%5C%20ranked%5C%20maps%5C%20played%20)
+![Bonus\ pp = 416.6667 * (1 - 0.9994^{N}),\ N = number\ of\ ranked\ maps\ with\ scores\ set\ by\ player](https://latex.codecogs.com/svg.latex?Bonus%5C%20pp%20%3D%20416.6667%20%2A%20%281%20-%200.9994%5E%7BN%7D%29%2C%5C%20N%20%3D%20number%5C%20of%5C%20ranked%5C%20maps%5C%20with%5C%20scores%5C%20set%5C%20by%5C%20player)
 
 Number of ranked maps played (N<sub>2</sub>): 2833.91 ≈ 2834<br>
 
 Working backwards to find N with [this](https://github.com/ppy/osu-performance/blob/92b3eaf832f79eb3e0731c4ce75a8944a2e7b48f/src/performance/User.cpp#L63) formula:<br><br>
-![Overall\ accuracy= (\frac{100}{20 * (1 - 0.95^{N})}) * \sum_{i=1}^{n} [(accuracy\ of\ i^{th}\ top\ score)\ *\ 0.95^{i - 1}],\\n = number\ of\ plays\ used\ to\ calculate\ overall\ accuracy\\N = number\ of\ ranked\ scores\ by\ player](https://latex.codecogs.com/svg.latex?Overall%5C%20accuracy%3D%20%28%5Cfrac%7B100%7D%7B20%20%2A%20%281%20-%200.95%5E%7BN%7D%29%7D%29%20%2A%20%5Csum_%7Bi%3D1%7D%5E%7Bn%7D%20%5B%28accuracy%5C%20of%5C%20i%5E%7Bth%7D%5C%20top%5C%20score%29%5C%20%2A%5C%200.95%5E%7Bi%20-%201%7D%5D%2C%5C%5Cn%20%3D%20number%5C%20of%5C%20plays%5C%20used%5C%20to%5C%20calculate%5C%20overall%5C%20accuracy%5C%5CN%20%3D%20number%5C%20of%5C%20ranked%5C%20scores%5C%20by%5C%20player)
+![Overall\ accuracy= (\frac{100}{20 * (1 - 0.95^{N})}) * \sum_{i=1}^{n} [(accuracy\ of\ i^{th}\ top\ score)\ *\ 0.95^{i - 1}],\\n = number\ of\ plays\ used\ to\ calculate\ overall\ accuracy\\N = number\ of\ ranked\ maps\ with\ scores\ set\ by\ player](https://latex.codecogs.com/svg.latex?Overall%5C%20accuracy%3D%20%28%5Cfrac%7B100%7D%7B20%20%2A%20%281%20-%200.95%5E%7BN%7D%29%7D%29%20%2A%20%5Csum_%7Bi%3D1%7D%5E%7Bn%7D%20%5B%28accuracy%5C%20of%5C%20i%5E%7Bth%7D%5C%20top%5C%20score%29%5C%20%2A%5C%200.95%5E%7Bi%20-%201%7D%5D%2C%5C%5Cn%20%3D%20number%5C%20of%5C%20plays%5C%20used%5C%20to%5C%20calculate%5C%20overall%5C%20accuracy%5C%5CN%20%3D%20number%5C%20of%5C%20ranked%5C%20maps%5C%20with%5C%20scores%5C%20set%5C%20by%5C%20player)
 
 Number of ranked maps played (N<sub>3</sub>): 100.13 ≈ 100<br>
 
