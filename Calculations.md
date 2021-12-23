@@ -100,7 +100,7 @@ If you have any questions about/suggestions for/issues with the current implemen
 
 ## Appendix: Accuracy calculations
 
-We will calculate three values of N using the three different methods mentioned above in the section for calculating overall accuracy. We will refer to them as N1, N2 and N3 in the same order as above. For the purpose of demonstration, the following values used here were obtained from my profile at 24 December 2021, 03:00AM UTC+8:
+We will calculate three values of N using the three different methods mentioned above in the section for calculating overall accuracy. We will refer to them as N<sub>1</sub>, N<sub>2</sub> and N<sub>3</sub> in the same order as above. For the purpose of demonstration, the following values used here were obtained from my profile at 24 December 2021, 03:00AM UTC+8:
 
 Total pp: 5105.28<br>
 Overall accuracy: 96.8531<br>
