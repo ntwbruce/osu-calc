@@ -42,65 +42,47 @@ var originalAcc;
 var originalPP;
 var originalRank;
 
-app.post("/scores-init", async (req, res) => {
+app.post("/scores", async (req, res) => {
   try {
-    var subId = req.body.osu_id;
-    var profile = await getProfile(subId);
+    var isInit = req.body.init;
+    if (isInit) {
 
-    __username = profile.username;
-    __acc = profile.userAcc;
-    __rank = profile.userRank;
-    __photo = profile.userPhoto;
-    __banner = profile.userBanner;
+      var subId = req.body.osu_id;
+      var profile = await getProfile(subId);
 
-    __factor = profile.accFactor;
-    __data = profile.scores;
-    __selected = profile.selected;
-    __total = profile.totalPP;
-    __totalnb = profile.totalPPNoBonus;
-    __bonus = profile.bonusPP;
+      __username = profile.username;
+      __acc = profile.userAcc;
+      __rank = profile.userRank;
+      __photo = profile.userPhoto;
+      __banner = profile.userBanner;
 
-    originalAcc = __acc;
-    originalPP = __total;
-    originalRank = __rank;
+      __factor = profile.accFactor;
+      __data = profile.scores;
+      __selected = profile.selected;
+      __total = profile.totalPP;
+      __totalnb = profile.totalPPNoBonus;
+      __bonus = profile.bonusPP;
 
-    res.render("scores", { title: "Delete My Scores",
-      userProfile: { 
-        username: __username, 
-        acc: __acc,
-        rank: __rank,
-        photo: __photo,
-        banner: __banner,
-        data: __data,
-        selected: __selected,
-        total: __total,
-        totalnb: __totalnb,
-        bonus: __bonus,
-        oriacc: originalAcc,
-        oriPP: originalPP,
-        oriRank: originalRank
-      }
-    });
+      originalAcc = __acc;
+      originalPP = __total;
+      originalRank = __rank;
 
-  } catch(e) {
-    console.log(e);
-    res.sendStatus(500);
-  }
-});
-
-app.post("/scores-updated", async (req, res) => {
-  try {
-    var changeID = req.body.changeID;
-    var change = req.body.change;
-    __selected[changeID] = !(change === 'delete');
-    __totalnb = ppCalc(__data, __selected);
-    __total = __totalnb + __bonus;
-    if (__total === originalPP) {
-      __acc = originalAcc;
-      __rank = originalRank;
     } else {
-      __acc = accCalc(__data, __selected, __factor);
-      __rank = rankCalc(rankingData, __total);
+
+      var isInit = req.body.init;
+      var changeID = req.body.changeID;
+      var change = req.body.change;
+      __selected[changeID] = !(change === 'delete');
+      __totalnb = ppCalc(__data, __selected);
+      __total = __totalnb + __bonus;
+      if (__total === originalPP) {
+        __acc = originalAcc;
+        __rank = originalRank;
+      } else {
+        __acc = accCalc(__data, __selected, __factor);
+        __rank = rankCalc(rankingData, __total);
+      }
+
     }
 
     res.render("scores", { title: "Delete My Scores",

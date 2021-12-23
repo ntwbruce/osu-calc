@@ -65,8 +65,9 @@ block layout-content
                   td.stats #{(Math.round(100 * (100 * score.accuracy + Number.EPSILON)) / 100).toFixed(2)} / #{score.rank}
                   td.stats #{(Math.round(100 * (score.pp + Number.EPSILON)) / 100).toFixed(2)}
                   td.stats
-                    form(action='/scores-updated', method='POST')
+                    form(action='/scores', method='POST')
                       input(type='hidden', name='changeID', value=index)
+                      input(type='hidden', name='init', value='')
                       input(type='submit', name='change', value='delete')
               else 
                 tr
@@ -80,8 +81,9 @@ block layout-content
                   td.removedstats #{(Math.round(100 * (100 * score.accuracy + Number.EPSILON)) / 100).toFixed(2)} / #{score.rank}
                   td.removedstats #{(Math.round(100 * (score.pp + Number.EPSILON)) / 100).toFixed(2)}
                   td.removedbutton
-                    form(action='/scores-updated', method='POST')
+                    form(action='/scores', method='POST')
                         input(type='hidden', name='changeID', value=index)
+                        input(type='hidden', name='init', value='')
                         input(type='submit', name='change', value='undelete')
 
     div.NavButtons
