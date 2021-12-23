@@ -14,7 +14,7 @@ some (if not all) calculations cannot be 100% accurate. This page details exactl
 
 ## Calculating performance points (pp) 
 
-Calculating for pp was probably the least troublesome out of the three. The formula and explanation for total raw (i.e without bonus) pp can be found on the osu! website [here](https://osu.ppy.sh/wiki/en/Performance_points) (Calculations &rarr; Weightage System), and essentially looks like this: 
+Calculating for pp was probably the least troublesome out of the three. The formula and explanation for total raw (i.e without bonus) pp can be found on the osu! website [here](https://osu.ppy.sh/wiki/en/Performance_points#weightage-system), and essentially looks like this: 
 
 ![Total\ pp = \sum_{i=1}^{n} [(i^{th}\ top\ score)\ *\ 0.95^{i - 1}],\\n = {number\ of\ plays\ used\ to\ calculate\ total\ pp}](https://latex.codecogs.com/svg.latex?Total%5C%20pp%20%3D%20%5Csum_%7Bi%3D1%7D%5E%7Bn%7D%20%5B%28i%5E%7Bth%7D%5C%20top%5C%20score%29%5C%20%2A%5C%200.95%5E%7Bi%20-%201%7D%5D%2C%5C%5Cn%20%3D%20%7Bnumber%5C%20of%5C%20plays%5C%20used%5C%20to%5C%20calculate%5C%20total%5C%20pp%7D)
 
@@ -100,27 +100,27 @@ If you have any questions about/suggestions for/issues with the current implemen
 
 ## Appendix: Accuracy calculations
 
-For the purpose of demonstration, the following values were obtained from my profile at 24 December 2021, 03:00AM UTC+8. We will calculate three values of N using the three different methods mentioned above in the section for calculating overall accuracy. We will refer to them as N1, N2 and N3 in the same order as above.
+We will calculate three values of N using the three different methods mentioned above in the section for calculating overall accuracy. We will refer to them as N1, N2 and N3 in the same order as above. For the purpose of demonstration, the following values used here were obtained from my profile at 24 December 2021, 03:00AM UTC+8:
 
 Total pp: 5105.28<br>
 Overall accuracy: 96.8531<br>
 Number of ranked maps played (N<sub>1</sub>): 4600<br>
 
-Using this formula for raw pp:
+Using [this](https://osu.ppy.sh/wiki/en/Performance_points#weightage-system) formula for raw pp:
 
 ![Total\ pp = \sum_{i=1}^{n} [(i^{th}\ top\ score)\ *\ 0.95^{i - 1}],\\n = {number\ of\ plays\ used\ to\ calculate\ total\ pp}](https://latex.codecogs.com/svg.latex?Total%5C%20pp%20%3D%20%5Csum_%7Bi%3D1%7D%5E%7Bn%7D%20%5B%28i%5E%7Bth%7D%5C%20top%5C%20score%29%5C%20%2A%5C%200.95%5E%7Bi%20-%201%7D%5D%2C%5C%5Cn%20%3D%20%7Bnumber%5C%20of%5C%20plays%5C%20used%5C%20to%5C%20calculate%5C%20total%5C%20pp%7D)<br>
 
 Total raw pp: 4674.66632<br>
 Bonus pp: 340.61368<br>
 
-Working backwards to find N with this formula:<br><br>
+Working backwards to find N with [this](https://osu.ppy.sh/wiki/en/Performance_points#how-much-bonus-pp-is-awarded-for-having-lots-of-scores-on-ranked-maps?) formula:<br><br>
 ![Bonus\ pp = 416.6667 * (1 - 0.9994^{N}),\ N = number\ of\ ranked\ maps\ played ](https://latex.codecogs.com/svg.latex?Bonus%5C%20pp%20%3D%20416.6667%20%2A%20%281%20-%200.9994%5E%7BN%7D%29%2C%5C%20N%20%3D%20number%5C%20of%5C%20ranked%5C%20maps%5C%20played%20)
 
 Number of ranked maps played (N<sub>2</sub>): 2833.91 ≈ 2834<br>
 
-Working backwards to find N with this formula:<br><br>
+Working backwards to find N with [this](https://github.com/ppy/osu-performance/blob/92b3eaf832f79eb3e0731c4ce75a8944a2e7b48f/src/performance/User.cpp#L63) formula:<br><br>
 ![Overall\ accuracy= (\frac{100}{20 * (1 - 0.95^{N})}) * \sum_{i=1}^{n} [(accuracy\ of\ i^{th}\ top\ score)\ *\ 0.95^{i - 1}],\\n = number\ of\ plays\ used\ to\ calculate\ overall\ accuracy\\N = number\ of\ ranked\ scores\ by\ player](https://latex.codecogs.com/svg.latex?Overall%5C%20accuracy%3D%20%28%5Cfrac%7B100%7D%7B20%20%2A%20%281%20-%200.95%5E%7BN%7D%29%7D%29%20%2A%20%5Csum_%7Bi%3D1%7D%5E%7Bn%7D%20%5B%28accuracy%5C%20of%5C%20i%5E%7Bth%7D%5C%20top%5C%20score%29%5C%20%2A%5C%200.95%5E%7Bi%20-%201%7D%5D%2C%5C%5Cn%20%3D%20number%5C%20of%5C%20plays%5C%20used%5C%20to%5C%20calculate%5C%20overall%5C%20accuracy%5C%5CN%20%3D%20number%5C%20of%5C%20ranked%5C%20scores%5C%20by%5C%20player)
 
 Number of ranked maps played (N<sub>3</sub>): 100.13 ≈ 100<br>
 
-Plugging N<sub>1</sub> or N<sub>2</sub> into the Overall Accuracy equation returns values of approximately 96.28, which is obviously incorrect despite the fact that 4600 and 2834 are more realistic values for the number of ranked maps played (speaking personally) than 100. Hence, as mentioned in the section for calculating profile accuracy, calculates profile accuracy using the method involving N<sub>3</sub>.
+Plugging N<sub>1</sub> or N<sub>2</sub> into the Overall Accuracy equation returns values of approximately 96.28, which is obviously incorrect despite the fact that 4600 and 2834 are more realistic values for the number of ranked maps played (speaking personally) than 100. Hence, as mentioned in the section for calculating profile accuracy, the program calculates profile accuracy using the method involving N<sub>3</sub>.
