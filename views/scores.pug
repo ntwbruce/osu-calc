@@ -57,7 +57,10 @@ block layout-content
                 tr
                   td.stats #{index + 1}
                   td.map #{score.map}
-                  td.stats #{(Math.round(100 * (score.difficulty + Number.EPSILON)) / 100).toFixed(2)}#{score.HRStar}
+                  if score.isDifficultyChanged
+                    td.stats #{(Math.round(100 * (score.difficulty + Number.EPSILON)) / 100).toFixed(2)}*
+                  else 
+                    td.stats #{(Math.round(100 * (score.difficulty + Number.EPSILON)) / 100).toFixed(2)}
                   td.stats #{score.mods}
                   td.stats #{(Math.round(100 * (100 * score.accuracy + Number.EPSILON)) / 100).toFixed(2)} / #{score.rank}
                   td.stats #{(Math.round(100 * (score.pp + Number.EPSILON)) / 100).toFixed(2)}
@@ -69,7 +72,10 @@ block layout-content
                 tr
                   td.removedstats #{index + 1}
                   td.removedmap #{score.map}
-                  td.removedstats #{(Math.round(100 * (score.difficulty + Number.EPSILON)) / 100).toFixed(2)}#{score.HRStar}
+                  if score.isDifficultyChanged
+                    td.removedstats #{(Math.round(100 * (score.difficulty + Number.EPSILON)) / 100).toFixed(2)}*
+                  else
+                    td.removedstats #{(Math.round(100 * (score.difficulty + Number.EPSILON)) / 100).toFixed(2)}
                   td.removedstats #{score.mods}
                   td.removedstats #{(Math.round(100 * (100 * score.accuracy + Number.EPSILON)) / 100).toFixed(2)} / #{score.rank}
                   td.removedstats #{(Math.round(100 * (score.pp + Number.EPSILON)) / 100).toFixed(2)}

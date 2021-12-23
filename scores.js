@@ -131,14 +131,14 @@ function scoreParser(score) {
   const map = `${score.beatmapset.artist} - ${score.beatmapset.title} [${score.beatmap.version}]`;
   const difficulty = score.beatmap.difficulty_rating;
 
-  var HRStar = "";
+  var isDifficultyChanged = false;
   var modsString;
   if (score.mods.length === 0) {
     modsString = "NM";
   } else {
     for (var i = 0; i < score.mods.length; i++) {
-      if (score.mods[i] === "HR" && HRStar === "") {
-        HRStar = "*";
+      if (!isDifficultyChanged && ["EZ", "HR", "DT", "NC", "FL"].includes(score.mods[i])) {
+        isDifficultyChanged = true;
       }
       if (i === 0) {
         modsString = `${score.mods[i]}`;
@@ -153,5 +153,5 @@ function scoreParser(score) {
   const rank = score.rank;
   const pp = score.pp;
 
-  return {map, difficulty, mods, accuracy, rank, pp, HRStar};
+  return {map, difficulty, mods, accuracy, rank, pp, isDifficultyChanged};
 }
