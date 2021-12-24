@@ -19,17 +19,15 @@ app.listen(port, () => {
 });
 
 var rankingData;
-var currentDate = [];
+var currentDate;
 
 app.get("/", async (req, res) => {
   var today = new Date();
-  var todayDate = [today.getFullYear(), today.getMonth(), today.getDate()];
-  if (currentDate.length != todayDate.length || currentDate[0] != todayDate[0] || currentDate[1] != todayDate[1] || currentDate[2] != todayDate[2]) {
+  if (!(currentDate instanceof Date) || currentDate.getFullYear() != today.getFullYear() || currentDate.getMonth() != today.getMonth() || currentDate.getDate() != today.getDate()) {
     rankingData = await getRankingData();
-    currentDate = todayDate;
+    currentDate = today;
   }
-  console.log(`${currentDate[0]} ${currentDate[1]} ${currentDate[2]}`);
-  res.render("index", { title: "dumb osu! calculator and shit" });
+  res.render("index", { title: "dumb osu! calculator and shit", date: currentDate });
 });
 
 var __username;
