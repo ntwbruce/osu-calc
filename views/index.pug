@@ -2,7 +2,7 @@ extends layout
 
 block layout-content
   div.View.WelcomeView
-    h1.Banner dumb osu! calculator and shit
+    h1.Banner #{title}
     div.MessageFixed
       div.Title
         h3 Wish you didn't submit those plays?
@@ -14,6 +14,8 @@ block layout-content
           input(type='number', name='osu_id', placeholder='eg. 15556259', min='1', required)
         input(type='hidden', name='init', value='init')
         input(type='submit', value='Submit')
+      <br>
+      span.Details Data for rank calculations last updated: #{date}
 
     div.NavButtons
       a(href="/")
