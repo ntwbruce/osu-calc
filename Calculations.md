@@ -1,0 +1,126 @@
+# Calculations
+
+Before I go into details about the calculations, if you would like to take a look at the osu! API that I will subsequently be referencing very often you can find it [here](https://osu.ppy.sh/docs/index.html).
+
+Due to limitations of 
+1) my knowledge of how to utilise the osu! API, 
+2) the API itself, and 
+3) how things like bonus pp and overall accuracy are calculated, 
+
+some (if not all) calculations cannot be 100% accurate. This page details exactly how the calculator works, and assumptions, compromises, and workarounds made. 
+
+<hr>
+<hr>
+
+## Calculating performance points (pp) 
+
+Calculating for pp was probably the least troublesome out of the three. The formula and explanation for total raw (i.e without bonus) pp can be found on the osu! website [here](https://osu.ppy.sh/wiki/en/Performance_points#weightage-system), and essentially looks like this: 
+
+![Total\ pp = \sum_{i=1}^{n} [(i^{th}\ top\ score)\ *\ 0.95^{i - 1}],\\n = {number\ of\ plays\ used\ to\ calculate\ total\ pp}](https://latex.codecogs.com/svg.latex?Total%5C%20pp%20%3D%20%5Csum_%7Bi%3D1%7D%5E%7Bn%7D%20%5B%28i%5E%7Bth%7D%5C%20top%5C%20score%29%5C%20%2A%5C%200.95%5E%7Bi%20-%201%7D%5D%2C%5C%5Cn%20%3D%20%7Bnumber%5C%20of%5C%20plays%5C%20used%5C%20to%5C%20calculate%5C%20total%5C%20pp%7D)
+
+The API only allows access to total overall pp (the one you see on your profile), so I first calculated the total raw pp using the formula above, and then the bonus pp is calculated by simply finding the difference between the two. There is actually a formula given for bonus pp [here](https://osu.ppy.sh/wiki/en/Performance_points#how-much-bonus-pp-is-awarded-for-having-lots-of-scores-on-ranked-maps?) that I did not use because it gives an incorrect value. As for why this formula for bonus pp and the one for raw pp above do not seem to add up, your guess is as good as mine. 
+
+The way pp is recalculated by this program when you 'delete' scores is just to use the formula above but exclude those scores that have been 'deleted', then add the precalculated bonus pp. 
+
+<hr>
+
+### Limitations and future fixes
+
+Were you to delete your top score for example, each of your top plays shifts up by 1 spot. What this means is that your 101<sup>st</sup> top play becomes your 100<sup>th</sup> and should be included in the calculation. However, the API only allows access to your top 100 plays, meaning the pp that would come from the 101<sup>st</sup>-turned-100<sup>th</sup> play cannot be obtained, so deleting one play means the new pp is calculated with only 99 plays. This is not a big issue if only a few plays are removed (the bottom few plays are scaled by 0.95<sup>99</sup>, 0.95<sup>98</sup>, etc, so not being able to include a few is relatively inconsequential), but the more plays you 'delete', the less accurate the recalculated pp value is going to be.
+
+Not much can be done to mitigate this issue at this time.
+
+<hr>
+<hr>
+
+## Calculating overall accuracy
+
+The best way to calculate overall accuracy was annoying to figure out for a number of reasons, the main one being that the osu! website does not give a specific formula, like for performance points. I did eventually manage to find [this](https://www.reddit.com/r/osugame/comments/ahdnre/comment/eedrmjl/?utm_source=share&utm_medium=web2x&context=3) comment by Magnus Cosmos on r/osugame who explains that the formula used to calculate overall accuracy is this: 
+
+![Overall\ accuracy= (\frac{100}{20 * (1 - 0.95^{N})}) * \sum_{i=1}^{n} [(accuracy\ of\ i^{th}\ top\ score)\ *\ 0.95^{i - 1}],\\n = number\ of\ plays\ used\ to\ calculate\ overall\ accuracy\\N = number\ of\ ranked\ maps\ with\ scores\ set\ by\ player](https://latex.codecogs.com/svg.latex?Overall%5C%20accuracy%3D%20%28%5Cfrac%7B100%7D%7B20%20%2A%20%281%20-%200.95%5E%7BN%7D%29%7D%29%20%2A%20%5Csum_%7Bi%3D1%7D%5E%7Bn%7D%20%5B%28accuracy%5C%20of%5C%20i%5E%7Bth%7D%5C%20top%5C%20score%29%5C%20%2A%5C%200.95%5E%7Bi%20-%201%7D%5D%2C%5C%5Cn%20%3D%20number%5C%20of%5C%20plays%5C%20used%5C%20to%5C%20calculate%5C%20overall%5C%20accuracy%5C%5CN%20%3D%20number%5C%20of%5C%20ranked%5C%20maps%5C%20with%5C%20scores%5C%20set%5C%20by%5C%20player)
+
+The comment also gives a link to the exact line in the osu! source code that he referenced, so check that out if you want to. 
+
+`N = number of ranked scores by player` refers to the number of ranked maps on which a score has been submitted by the player (not sure this needed clarification but whatever). This is not an available statistic on your normal osu! profile page but there are multiple ways to find this value. It can be obtained:
+
+1) directly via the API. 
+2) by using [this](https://osu.ppy.sh/wiki/en/Performance_points#how-much-bonus-pp-is-awarded-for-having-lots-of-scores-on-ranked-maps?) formula (that I also mentioned above in the pp calculation section). 
+3) working backwards using the player's displayed overall accuracy (the one on your profile page, also attainable via the API).
+
+More details can be found in the appendix below if you're interested, but in short, experimenting with values obtained by methods 1 and 2 resulted in inaccurate values. Hence, by method 3, the player's overall accuracy is plugged into the above equation which is then solved for the value of N. This value is then used for subsequent calculations of overall accuracy.
+
+<hr>
+
+### Limitations and future fixes
+
+The main limitation with this solution essentially that of the pp calculation: deleting more plays will result in a more inaccurate estimation of overall accuracy. The effect can be seen in the fact that the more plays you delete, the lower your accuracy is, even if you're only removing low accuracy plays.
+
+I'm not sure exactly how to go about fixing this at this time.
+
+<hr>
+<hr>
+
+## Calculating rank
+
+Rank recalculations were probably the most scuffed of all of them. There is no way to obtain the rank corresponding to a given pp value or vice versa using the API. There is an [online tool](https://osudaily.net/ppbrowser.php) that can do that, but it is regrettably not open source so I am not sure how it works.
+
+The best way that I figured it could be done was to instead make rank estimations based on the Singapore country leaderboard. The current implementation uses the API to copy the entire SG leaderboard upon deployment of the website, which is then used to estimate rank by finding the closest rank corresponding to the given pp value.
+
+As for why the Singapore country leaderboard specifically and not the global leaderboard or other countries', 1) I'm Singaporean and 2) I think it covers a decent range of rank and pp values (ranks 113 down to ~729000, 14020 down to ~640pp) compared to using the global leaderboard or countries like the US where it's impossible to estimate ranks for players with lower rank/pp.
+
+<hr>
+
+### Limitations and future fixes
+
+This solution, while one that sort of works at the moment, has a lot of obvious issues. 
+
+Firstly, it's not a perfect estimate since it's unlikely there is a player for every possible pp value. For example:
+
+![rank gap](public/rankgap.png)
+
+As of when this screenshot was taken, AceGain is at global rank 46008 with 5017pp while I (begora_) am at global rank 46055 with 5015pp. There is no way to accurately derive one specific rank in the range of 46008 to 46055 for a player with 5016pp, hence a slightly inaccurate estimate.
+
+Secondly, there is currently no way to find the rank of a player with greater than 14020pp (Demonical's pp) or less than 638pp (the pp at the #10000 on the leaderboard). In such cases, the estimated rank defaults to 113 (Demonical's rank) or ~729000 (#10000 on the leaderboard) respectively.
+
+As a fix for the players above rank 113, I'm looking into a working solution by getting the ranks/pp of players from the global leaderboard. There is no easy fix for the players below rank ~729000 however, but I'm thinking about using other country leaderboards.
+
+Lastly, the current implementation of obtaining the rank data from the leaderboard only obtains that data once, upon deployment of the website. The obvious issue with this is that it doesn't update, ever, even as live leaderboards continue to update.
+
+I'm currently working on a fix that ensures that the leaderboard data is updated once a day. Once a day is reasonable: re-requesting and saving the entire leaderboard of data takes about 10-15 seconds and it would be undesirable if users had to wait 10-15 seconds every time they open the page.
+
+<hr>
+<hr>
+
+## Issues
+
+If you have any questions about/suggestions for/issues with the current implementation, feel free to open an issue [here](https://github.com/ntwbruce/osu-calc/issues).
+
+<hr>
+<hr>
+
+## Appendix: Accuracy calculations
+
+We will calculate three values of N (number of ranked maps with scores set by player) using the three different methods mentioned above in the section for calculating overall accuracy. We will refer to them as N<sub>1</sub>, N<sub>2</sub> and N<sub>3</sub> in the same order as above. For the purpose of demonstration, the following values used here were obtained from my profile at 24 December 2021, 03:00AM UTC+8:
+
+Total pp: 5105.28<br>
+Overall accuracy: 96.8531<br>
+Number of ranked maps played (N<sub>1</sub>): 4600<br>
+
+Using [this](https://osu.ppy.sh/wiki/en/Performance_points#weightage-system) formula for raw pp:
+
+![Total\ pp = \sum_{i=1}^{n} [(i^{th}\ top\ score)\ *\ 0.95^{i - 1}],\\n = {number\ of\ plays\ used\ to\ calculate\ total\ pp}](https://latex.codecogs.com/svg.latex?Total%5C%20pp%20%3D%20%5Csum_%7Bi%3D1%7D%5E%7Bn%7D%20%5B%28i%5E%7Bth%7D%5C%20top%5C%20score%29%5C%20%2A%5C%200.95%5E%7Bi%20-%201%7D%5D%2C%5C%5Cn%20%3D%20%7Bnumber%5C%20of%5C%20plays%5C%20used%5C%20to%5C%20calculate%5C%20total%5C%20pp%7D)<br>
+
+Total raw pp: 4674.66632<br>
+Bonus pp: 340.61368<br>
+
+Working backwards to find N with [this](https://osu.ppy.sh/wiki/en/Performance_points#how-much-bonus-pp-is-awarded-for-having-lots-of-scores-on-ranked-maps?) formula:<br><br>
+![Bonus\ pp = 416.6667 * (1 - 0.9994^{N}),\ N = number\ of\ ranked\ maps\ with\ scores\ set\ by\ player](https://latex.codecogs.com/svg.latex?Bonus%5C%20pp%20%3D%20416.6667%20%2A%20%281%20-%200.9994%5E%7BN%7D%29%2C%5C%20N%20%3D%20number%5C%20of%5C%20ranked%5C%20maps%5C%20with%5C%20scores%5C%20set%5C%20by%5C%20player)
+
+Number of ranked maps played (N<sub>2</sub>): 2833.91 ≈ 2834<br>
+
+Working backwards to find N with [this](https://github.com/ppy/osu-performance/blob/92b3eaf832f79eb3e0731c4ce75a8944a2e7b48f/src/performance/User.cpp#L63) formula:<br><br>
+![Overall\ accuracy= (\frac{100}{20 * (1 - 0.95^{N})}) * \sum_{i=1}^{n} [(accuracy\ of\ i^{th}\ top\ score)\ *\ 0.95^{i - 1}],\\n = number\ of\ plays\ used\ to\ calculate\ overall\ accuracy\\N = number\ of\ ranked\ maps\ with\ scores\ set\ by\ player](https://latex.codecogs.com/svg.latex?Overall%5C%20accuracy%3D%20%28%5Cfrac%7B100%7D%7B20%20%2A%20%281%20-%200.95%5E%7BN%7D%29%7D%29%20%2A%20%5Csum_%7Bi%3D1%7D%5E%7Bn%7D%20%5B%28accuracy%5C%20of%5C%20i%5E%7Bth%7D%5C%20top%5C%20score%29%5C%20%2A%5C%200.95%5E%7Bi%20-%201%7D%5D%2C%5C%5Cn%20%3D%20number%5C%20of%5C%20plays%5C%20used%5C%20to%5C%20calculate%5C%20overall%5C%20accuracy%5C%5CN%20%3D%20number%5C%20of%5C%20ranked%5C%20maps%5C%20with%5C%20scores%5C%20set%5C%20by%5C%20player)
+
+Number of ranked maps played (N<sub>3</sub>): 100.13 ≈ 100<br>
+
+Plugging N<sub>1</sub> or N<sub>2</sub> into the Overall Accuracy equation returns values of approximately 96.28, which is obviously incorrect despite the fact that 4600 and 2834 are more realistic values for the number of ranked maps played (speaking personally) than 100. Hence, as mentioned in the section for calculating profile accuracy, the program calculates profile accuracy using the method involving N<sub>3</sub>.

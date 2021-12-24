@@ -204,13 +204,13 @@ table {
   text-align: left;
 }
 
-.removed {
-  background-color: rgba(241, 49, 87, 0.877);;
+.removedstats {
+  background-color: rgba(241, 49, 87, 0.877);
 }
 
 .removedmap {
   text-align: left;
-  background-color: rgba(241, 49, 87, 0.877);;
+  background-color: rgba(241, 49, 87, 0.877);
 }
 
 .stats {

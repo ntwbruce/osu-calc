@@ -8,10 +8,11 @@ block layout-content
         h3 Wish you didn't submit those plays?
         h1 Delete Your Scores
       span.Details You can't really delete your scores but y'know what if you could.
-      form(action='/scores-init', method='POST')
+      form(action='/scores', method='POST')
         p
           | Insert your osu! ID here: 
           input(type='number', name='osu_id', placeholder='eg. 15556259', min='1', required)
+        input(type='hidden', name='init', value='init')
         input(type='submit', value='Submit')
 
     div.NavButtons

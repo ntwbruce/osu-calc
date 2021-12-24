@@ -46,34 +46,48 @@ block layout-content
             tr
               th #
               th.map Map
-              th.stats Accuracy (%)
+              th.stats Star Rating
+              th.stats Mods
+              th.stats Accuracy(%) / Rank
               th.stats pp
               th.stats Delete
           tbody
-            each val, index in userProfile.data
+            each score, index in userProfile.data
               if userProfile.selected[index]
                 tr
                   td.stats #{index + 1}
-                  td.map #{val[0]}
-                  td.stats #{(Math.round(100 * (100 * val[1] + Number.EPSILON)) / 100).toFixed(2)}
-                  td.stats #{(Math.round(100 * (val[2] + Number.EPSILON)) / 100).toFixed(2)}
+                  td.map #{score.map}
+                  if score.isDifficultyChanged
+                    td.stats #{(Math.round(100 * (score.difficulty + Number.EPSILON)) / 100).toFixed(2)}*
+                  else 
+                    td.stats #{(Math.round(100 * (score.difficulty + Number.EPSILON)) / 100).toFixed(2)}
+                  td.stats #{score.mods}
+                  td.stats #{(Math.round(100 * (100 * score.accuracy + Number.EPSILON)) / 100).toFixed(2)} / #{score.rank}
+                  td.stats #{(Math.round(100 * (score.pp + Number.EPSILON)) / 100).toFixed(2)}
                   td.stats
-                    form(action='/scores-updated', method='POST')
+                    form(action='/scores', method='POST')
                       input(type='hidden', name='changeID', value=index)
+                      input(type='hidden', name='init', value='')
                       input(type='submit', name='change', value='delete')
               else 
                 tr
-                  td.removed #{index + 1}
-                  td.removedmap #{val[0]}
-                  td.removed #{(Math.round(100 * (100 * val[1] + Number.EPSILON)) / 100).toFixed(2)}
-                  td.removed #{(Math.round(100 * (val[2] + Number.EPSILON)) / 100).toFixed(2)}
+                  td.removedstats #{index + 1}
+                  td.removedmap #{score.map}
+                  if score.isDifficultyChanged
+                    td.removedstats #{(Math.round(100 * (score.difficulty + Number.EPSILON)) / 100).toFixed(2)}*
+                  else
+                    td.removedstats #{(Math.round(100 * (score.difficulty + Number.EPSILON)) / 100).toFixed(2)}
+                  td.removedstats #{score.mods}
+                  td.removedstats #{(Math.round(100 * (100 * score.accuracy + Number.EPSILON)) / 100).toFixed(2)} / #{score.rank}
+                  td.removedstats #{(Math.round(100 * (score.pp + Number.EPSILON)) / 100).toFixed(2)}
                   td.removedbutton
-                    form(action='/scores-updated', method='POST')
+                    form(action='/scores', method='POST')
                         input(type='hidden', name='changeID', value=index)
+                        input(type='hidden', name='init', value='')
                         input(type='submit', name='change', value='undelete')
 
     div.NavButtons
       a(href="/")
         div.NavButton Try another profile
-      a(href="/")
+      a(href="https://github.com/ntwbruce/osu-calc/blob/main/Calculations.md", target="_blank")
         div.NavButton Details about calculations (TBU)
