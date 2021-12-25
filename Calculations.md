@@ -64,7 +64,7 @@ I'm not sure exactly how to go about fixing this at this time.
 
 Rank recalculations were probably the most scuffed of all of them. There is no way to obtain the rank corresponding to a given pp value or vice versa using the API. There is an [online tool](https://osudaily.net/ppbrowser.php) that can do that, but it is regrettably not open source so I am not sure how it works.
 
-The best way that I figured it could be done was to instead make rank estimations based on the Singapore country leaderboard. The current implementation uses the API to copy the entire SG leaderboard upon deployment of the website, which is then used to estimate rank by finding the closest rank corresponding to the given pp value.
+The best way that I figured it could be done was to instead make rank estimations based on the Singapore country leaderboard. The current implementation uses the API to copy the entire SG leaderboard once a day, which is then used to estimate rank by finding the closest rank corresponding to the given pp value.
 
 As for why the Singapore country leaderboard specifically and not the global leaderboard or other countries', 1) I'm Singaporean and 2) I think it covers a decent range of rank and pp values (ranks 113 down to ~729000, 14020 down to ~640pp) compared to using the global leaderboard or countries like the US where it's impossible to estimate ranks for players with lower rank/pp.
 
@@ -83,10 +83,6 @@ As of when this screenshot was taken, AceGain is at global rank 46008 with 5017p
 Secondly, there is currently no way to find the rank of a player with greater than 14020pp (Demonical's pp) or less than 638pp (the pp at the #10000 on the leaderboard). In such cases, the estimated rank defaults to 113 (Demonical's rank) or ~729000 (#10000 on the leaderboard) respectively.
 
 As a fix for the players above rank 113, I'm looking into a working solution by getting the ranks/pp of players from the global leaderboard. There is no easy fix for the players below rank ~729000 however, but I'm thinking about using other country leaderboards.
-
-Lastly, the current implementation of obtaining the rank data from the leaderboard only obtains that data once, upon deployment of the website. The obvious issue with this is that it doesn't update, ever, even as live leaderboards continue to update.
-
-I'm currently working on a fix that ensures that the leaderboard data is updated once a day. Once a day is reasonable: re-requesting and saving the entire leaderboard of data takes about 10-15 seconds and it would be undesirable if users had to wait 10-15 seconds every time they open the page.
 
 <hr>
 <hr>
