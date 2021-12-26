@@ -60,7 +60,7 @@ app.post("/scores/:id(\\d+)", async (req, res) => {
         banner: profile.userBanner
       },
       scores: profile.scores,
-      selection: profile.selected,
+      selection: profile.selection,
       precalculated: {
         factor: profile.accFactor,
         bonusPP: profile.bonusPP

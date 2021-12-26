@@ -28,7 +28,7 @@ export async function getProfile(osu_id) {
   });
   const userData = await userResponse.json();
 
-  // Get username and profile accuracy from user data
+  // Get user profile details
   const username = userData.username;
   const userAcc = userData.statistics.hit_accuracy;
   const userRank = userData.statistics.global_rank;
@@ -47,36 +47,36 @@ export async function getProfile(osu_id) {
   const scoreData = await scoresResponse.json();
 
   // Initialise arrays containing score details and which scores are being excluded from calculation
-  // For the 'Delete My Scores' calculator, selected array is updated when user 'deletes' or 'undeletes' map
+  // For the 'Delete My Scores' calculator, selection array is updated when user 'deletes' or 'undeletes' map
   var scores = [];
-  var selected = [];
+  var selection = [];
   for (var i = 0; i < SCORE_LIMIT; i++) {
     scores.push(scoreParser(scoreData[i]));
-    selected[i] = true;
+    selection[i] = true;
   }
 
   // Calculate pp components and profile accuracy factor
   const accFactor = accFactorCalc(userAcc, scores);
-  const totalPPNoBonus = ppCalc(scores, selected);
+  const totalPPNoBonus = ppCalc(scores, selection);
   const totalPP = userData.statistics.pp;
   const bonusPP = totalPP - totalPPNoBonus;
   
-  return {username, userAcc, userRank, userPhoto, userBanner, accFactor, scores, selected, totalPP, totalPPNoBonus, bonusPP};
+  return {username, userAcc, userRank, userPhoto, userBanner, accFactor, scores, selection, totalPP, totalPPNoBonus, bonusPP};
   
 }
 
 /**
- * Returns total pp from a selected set of scores.
+ * Returns total pp from a selection of scores.
  *
  * @param {*} scores with which pp is calculated.
- * @param {*} selected scores to calculate total pp with. If a score is 'deleted' by user, represented as false in selected array, and vice versa.
+ * @param {*} selection of scores to calculate total pp with. If a score is 'deleted' by user, represented as false in selection array, and vice versa.
  * @returns total pp from the selected set of scores.
  */
-export function ppCalc(scores, selected) {
+export function ppCalc(scores, selection) {
   var total = 0;
   var index = 0;
   for (var i = 0; i < SCORE_LIMIT; i++) {
-    if (selected[i]) {
+    if (selection[i]) {
       total += scores[i].pp * Math.pow(0.95, index);
       index++;
     }
@@ -86,18 +86,18 @@ export function ppCalc(scores, selected) {
 
 
 /**
- * Returns overall accuracy from a selected set of scores with specified profile accuracy factor.
+ * Returns overall accuracy from a selection of scores with specified profile accuracy factor.
  *
  * @param {*} scores with which overall accuracy is calculated.
- * @param {*} selected scores to calculate overall accuracy with. If a score is 'deleted' by user, represented as false in selected array, and vice versa.
+ * @param {*} selection of scores to calculate overall accuracy with. If a score is 'deleted' by user, represented as false in selection array, and vice versa.
  * @param {*} factor used to calculate overall accuracy (explained in accFactorCalc below).
  * @returns overall profile accuracy.
  */
-export function accCalc(scores, selected, factor) {
+export function accCalc(scores, selection, factor) {
   var total = 0;
   var index = 0;
   for (var i = 0; i < SCORE_LIMIT; i++) {
-    if (selected[i]) {
+    if (selection[i]) {
       total += scores[i].accuracy * Math.pow(0.95, index);
       index++;
     }
