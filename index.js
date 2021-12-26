@@ -57,7 +57,8 @@ app.post("/scores/:id(\\d+)", async (req, res) => {
         rank: profile.userRank,
         totalPP: profile.totalPP,
         photo: profile.userPhoto,
-        banner: profile.userBanner
+        banner: profile.userBanner,
+        numOfScores: profile.userNumOfScores
       },
       scores: profile.scores,
       selection: profile.selection,
@@ -81,7 +82,7 @@ app.post("/scores/:id(\\d+)", async (req, res) => {
     var newSelection = currentData.selection;
     newSelection[changeID] = !(change === 'delete');
 
-    var newPP = ppCalc(currentData.scores, newSelection) + currentData.precalculated.bonusPP;
+    var newPP = ppCalc(currentData.scores, newSelection, currentData.profile.numOfScores) + currentData.precalculated.bonusPP;
 
     var newAcc;
     var newRank;
@@ -89,11 +90,11 @@ app.post("/scores/:id(\\d+)", async (req, res) => {
       newAcc = currentData.profile.acc;
       newRank = currentData.profile.rank;
     } else {
-      newAcc = accCalc(currentData.scores, newSelection, currentData.precalculated.factor);
+      newAcc = accCalc(currentData.scores, newSelection, currentData.precalculated.factor, currentData.profile.numOfScores);
       newRank = rankCalc(rankingData, newPP);
     }
 
-    var newSavedData = {
+    playerMap.set(currentUserId, {
       profile: currentData.profile,
       scores: currentData.scores,
       selection: newSelection,
@@ -103,9 +104,7 @@ app.post("/scores/:id(\\d+)", async (req, res) => {
         totalPP: newPP,
         rank: newRank
       }
-    };
-
-    playerMap.set(currentUserId, newSavedData);
+    });
 
   }
 

@@ -4,7 +4,6 @@ import { get_token } from "./token.js";
 dotenv.config();
 
 const API_URL = 'https://osu.ppy.sh/api/v2';
-const SCORE_LIMIT = 100;
 
 /**
  * Obtains details of profile with specified ID required for subsequent calculations.
@@ -34,9 +33,10 @@ export async function getProfile(osu_id) {
   const userRank = userData.statistics.global_rank;
   const userPhoto = userData.avatar_url;
   const userBanner = userData.cover_url;
+  const userNumOfScores = userData.scores_best_count;
 
   // Get data of user's 100 best scores
-  const scoresUrl = `${API_URL}/users/${osu_id}/scores/best?mode=osu&limit=${SCORE_LIMIT}`;
+  const scoresUrl = `${API_URL}/users/${osu_id}/scores/best?mode=osu&limit=${userNumOfScores}`;
   const scoresResponse = await fetch(scoresUrl, {
     headers: {
       'Content-Type': 'application/json',
@@ -50,32 +50,25 @@ export async function getProfile(osu_id) {
   // For the 'Delete My Scores' calculator, selection array is updated when user 'deletes' or 'undeletes' map
   var scores = [];
   var selection = [];
-  for (var i = 0; i < SCORE_LIMIT; i++) {
+  for (var i = 0; i < userNumOfScores; i++) {
     scores.push(scoreParser(scoreData[i]));
     selection[i] = true;
   }
 
   // Calculate pp components and profile accuracy factor
-  const accFactor = accFactorCalc(userAcc, scores);
-  const totalPPNoBonus = ppCalc(scores, selection);
+  const accFactor = accFactorCalc(userAcc, scores, userNumOfScores);
+  const totalPPNoBonus = ppCalc(scores, selection, userNumOfScores);
   const totalPP = userData.statistics.pp;
   const bonusPP = totalPP - totalPPNoBonus;
   
-  return {username, userAcc, userRank, userPhoto, userBanner, accFactor, scores, selection, totalPP, totalPPNoBonus, bonusPP};
+  return {username, userAcc, userRank, userPhoto, userBanner, userNumOfScores, accFactor, scores, selection, totalPP, totalPPNoBonus, bonusPP};
   
 }
 
-/**
- * Returns total pp from a selection of scores.
- *
- * @param {*} scores with which pp is calculated.
- * @param {*} selection of scores to calculate total pp with. If a score is 'deleted' by user, represented as false in selection array, and vice versa.
- * @returns total pp from the selected set of scores.
- */
-export function ppCalc(scores, selection) {
+export function ppCalc(scores, selection, limit) {
   var total = 0;
   var index = 0;
-  for (var i = 0; i < SCORE_LIMIT; i++) {
+  for (var i = 0; i < limit; i++) {
     if (selection[i]) {
       total += scores[i].pp * Math.pow(0.95, index);
       index++;
@@ -84,19 +77,10 @@ export function ppCalc(scores, selection) {
   return total;
 }
 
-
-/**
- * Returns overall accuracy from a selection of scores with specified profile accuracy factor.
- *
- * @param {*} scores with which overall accuracy is calculated.
- * @param {*} selection of scores to calculate overall accuracy with. If a score is 'deleted' by user, represented as false in selection array, and vice versa.
- * @param {*} factor used to calculate overall accuracy (explained in accFactorCalc below).
- * @returns overall profile accuracy.
- */
-export function accCalc(scores, selection, factor) {
+export function accCalc(scores, selection, factor, limit) {
   var total = 0;
   var index = 0;
-  for (var i = 0; i < SCORE_LIMIT; i++) {
+  for (var i = 0; i < limit; i++) {
     if (selection[i]) {
       total += scores[i].accuracy * Math.pow(0.95, index);
       index++;
@@ -105,17 +89,10 @@ export function accCalc(scores, selection, factor) {
   return total * 100 / (20 * (1 - Math.pow(0.95, factor)));
 }
 
-/**
- * Calculates the value of a factor required in the calculation of overall profile accuracy.
- * 
- * @param {*} userAcc 
- * @param {*} scores with which overall accuracy is calculated.
- * @returns factor used in accCalc.
- */
-function accFactorCalc(userAcc, scores) {
+function accFactorCalc(userAcc, scores, limit) {
   var total = 0;
   var index = 0;
-  for (var i = 0; i < SCORE_LIMIT; i++) {
+  for (var i = 0; i < limit; i++) {
     total += scores[i].accuracy * Math.pow(0.95, index);
     index++;
   }
