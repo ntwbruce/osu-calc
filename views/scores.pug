@@ -53,7 +53,7 @@ block layout-content
               th.stats Delete
           tbody
             each score, index in userProfile.data
-              if userProfile.selected[index]
+              if userProfile.selection[index]
                 tr
                   td.stats #{index + 1}
                   td.map #{score.map}

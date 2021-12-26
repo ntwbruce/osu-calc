@@ -50,7 +50,7 @@ app.post("/scores/:id(\\d+)", async (req, res) => {
 
     var profile = await getProfile(currentUserId);
 
-    var savedData = {
+    playerMap.set(currentUserId, {
       profile: {
         username: profile.username,
         acc: profile.userAcc,
@@ -70,9 +70,7 @@ app.post("/scores/:id(\\d+)", async (req, res) => {
         totalPP: profile.totalPP,
         rank: profile.userRank
       }
-    };
-
-    playerMap.set(currentUserId, savedData);
+    });
 
   } else {
 
@@ -125,7 +123,7 @@ app.post("/scores/:id(\\d+)", async (req, res) => {
       banner: dataToRender.profile.banner,
       
       data: dataToRender.scores,
-      selected: dataToRender.selection,
+      selection: dataToRender.selection,
       
       bonus: dataToRender.precalculated.bonusPP,
 
