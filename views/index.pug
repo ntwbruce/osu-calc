@@ -15,7 +15,7 @@ block layout-content
         input(type='hidden', name='init', value='init')
         input(type='submit', value='Submit')
       <br>
-      span.Details Data for rank calculations last updated: #{date}
+      span.Details Data for rank calculations last updated: #{date.toLocaleString('en-SG')} (Singapore Standard Time / UTC+8)
 
     div.NavButtons
       a(href="https://github.com/ntwbruce/osu-calc/blob/main/Calculations.md", target="_blank")
