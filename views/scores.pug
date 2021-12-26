@@ -53,7 +53,7 @@ block layout-content
               th.stats Delete
           tbody
             each score, index in userProfile.data
-              if userProfile.selected[index]
+              if userProfile.selection[index]
                 tr
                   td.stats #{index + 1}
                   td.map #{score.map}
@@ -66,6 +66,7 @@ block layout-content
                   td.stats #{(Math.round(100 * (score.pp + Number.EPSILON)) / 100).toFixed(2)}
                   td.stats
                     form(action='/scores', method='POST')
+                      input(type='hidden', name='osu_id', value=userProfile.userid)
                       input(type='hidden', name='changeID', value=index)
                       input(type='hidden', name='init', value='')
                       input(type='submit', name='change', value='delete')
@@ -82,6 +83,7 @@ block layout-content
                   td.removedstats #{(Math.round(100 * (score.pp + Number.EPSILON)) / 100).toFixed(2)}
                   td.removedbutton
                     form(action='/scores', method='POST')
+                        input(type='hidden', name='osu_id', value=userProfile.userid)
                         input(type='hidden', name='changeID', value=index)
                         input(type='hidden', name='init', value='')
                         input(type='submit', name='change', value='undelete')
