@@ -27,7 +27,7 @@ app.get("/", async (req, res) => {
     rankingData = await getRankingData();
     currentDate = today;
   }
-  res.render("index", { title: "dumb osu! calculator and shit", date: currentDate });
+  res.render("index", { title: "Delete My Scores", date: currentDate });
 });
 
 var playerMap = new Map();
@@ -45,37 +45,42 @@ app.post("/scores/:id(\\d+)", async (req, res) => {
 
   var isInit = req.body.init;
   var currentUserId = req.body.osu_id;
+  var isScoreRender = true;
 
   if (isInit) {
-
     var profileData = await getProfile(currentUserId);
 
-    playerMap.set(currentUserId, {
-      profile: {
-        username: profileData.username,
-        acc: profileData.userAcc,
-        rank: profileData.userRank,
-        totalPP: profileData.totalPP,
-        photo: profileData.userPhoto,
-        banner: profileData.userBanner,
-        numOfScores: profileData.userNumOfScores,
-        isInactive: profileData.isInactive
-      },
-      scores: profileData.scores,
-      selection: profileData.selection,
-      precalculated: {
-        factor: profileData.accFactor,
-        bonusPP: profileData.bonusPP
-      },
-      calculated: {
-        acc: profileData.userAcc,
-        totalPP: profileData.totalPP,
-        rank: profileData.userRank
-      }
-    });
+    if (profileData.exists) {
+      playerMap.set(currentUserId, {
+        profile: {
+          username: profileData.username,
+          acc: profileData.userAcc,
+          rank: profileData.userRank,
+          totalPP: profileData.totalPP,
+          photo: profileData.userPhoto,
+          banner: profileData.userBanner,
+          numOfScores: profileData.userNumOfScores,
+          isInactive: profileData.isInactive
+        },
+        scores: profileData.scores,
+        selection: profileData.selection,
+        precalculated: {
+          factor: profileData.accFactor,
+          bonusPP: profileData.bonusPP
+        },
+        calculated: {
+          acc: profileData.userAcc,
+          totalPP: profileData.totalPP,
+          rank: profileData.userRank
+        }
+      });
+
+    } else {
+      isScoreRender = false;
+      res.redirect("/scores/usernotfound");
+    }
 
   } else {
-
     var changeID = req.body.changeID;
     var change = req.body.change;
     var currentData = playerMap.get(currentUserId);
@@ -108,34 +113,38 @@ app.post("/scores/:id(\\d+)", async (req, res) => {
           rank: newRank
         }
       });
-
     }
-
   }
 
-  var dataToRender = playerMap.get(currentUserId);
+  if (isScoreRender) {
+    var dataToRender = playerMap.get(currentUserId);
 
-  res.render("scores", { title: "Delete My Scores",
-    userProfile: { 
-      userid: currentUserId,
+    res.render("scores", { title: "Delete My Scores",
+      userProfile: { 
+        userid: currentUserId,
 
-      username: dataToRender.profile.username,
-      oriacc: dataToRender.profile.acc,
-      oriRank: dataToRender.profile.rank,
-      oriPP: dataToRender.profile.totalPP,
-      photo: dataToRender.profile.photo,
-      banner: dataToRender.profile.banner,
-      isInactive: dataToRender.profile.isInactive,
-      
-      data: dataToRender.scores,
-      selection: dataToRender.selection,
-      
-      bonus: dataToRender.precalculated.bonusPP,
+        username: dataToRender.profile.username,
+        oriacc: dataToRender.profile.acc,
+        oriRank: dataToRender.profile.rank,
+        oriPP: dataToRender.profile.totalPP,
+        photo: dataToRender.profile.photo,
+        banner: dataToRender.profile.banner,
+        isInactive: dataToRender.profile.isInactive,
+        
+        data: dataToRender.scores,
+        selection: dataToRender.selection,
+        
+        bonus: dataToRender.precalculated.bonusPP,
 
-      acc: dataToRender.calculated.acc,
-      total: dataToRender.calculated.totalPP,
-      rank: dataToRender.calculated.rank,
-      
-    }
-  });
+        acc: dataToRender.calculated.acc,
+        total: dataToRender.calculated.totalPP,
+        rank: dataToRender.calculated.rank,
+        
+      }
+    });
+  }
+});
+
+app.get("/scores/usernotfound", async (req, res) => {
+  res.render("usernotfound", { title: "Delete My Scores" });
 });

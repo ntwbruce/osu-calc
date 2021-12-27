@@ -5,12 +5,6 @@ dotenv.config();
 
 const API_URL = 'https://osu.ppy.sh/api/v2';
 
-/**
- * Obtains details of profile with specified ID required for subsequent calculations.
- *
- * @param {*} osu_id used to obtain profile details.
- * @returns object containing profile details used in calculations later.
- */
 export async function getProfile(osu_id) {
 
   // Get OAuth token
@@ -26,6 +20,10 @@ export async function getProfile(osu_id) {
     }
   });
   const userData = await userResponse.json();
+
+  if (userData.error === null) {
+    return {exists: false};
+  }
 
   // Get user profile details
   const username = userData.username;
@@ -71,7 +69,7 @@ export async function getProfile(osu_id) {
     isInactive = true;
   }
   
-  return {username, userAcc, userRank, userPhoto, userBanner, userNumOfScores, accFactor, scores, selection, totalPP, totalPPNoBonus, bonusPP, isInactive};
+  return {exists: true, username, userAcc, userRank, userPhoto, userBanner, userNumOfScores, accFactor, scores, selection, totalPP, totalPPNoBonus, bonusPP, isInactive};
   
 }
 
@@ -109,11 +107,6 @@ function accFactorCalc(userAcc, scores, limit) {
   return Math.log(1 - 5 * (total / userAcc)) / Math.log(0.95);
 }
 
-/**
- * Parses a score and returns an object containing a given score's various values.
- * @param {*} score whose values are parsed and returned.
- * @returns an object containing a given score's various values.
- */
 function scoreParser(score) {
   const map = `${score.beatmapset.artist} - ${score.beatmapset.title} [${score.beatmap.version}]`;
   const difficulty = score.beatmap.difficulty_rating;

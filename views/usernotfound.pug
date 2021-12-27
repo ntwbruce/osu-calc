@@ -1,0 +1,12 @@
+extends layout
+
+block layout-content
+  div.View.WelcomeView
+    h1.Banner #{title}
+    div.MessageFixed
+      div.Title
+        h1 User Not Found
+      span.Details Player profile requested is either restricted or deleted. Try another one?
+    div.NavButtons
+      a(href="/")
+        div.NavButton Try another profile
