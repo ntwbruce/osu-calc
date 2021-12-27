@@ -11,11 +11,19 @@ block layout-content
           div.opacity
             div.profilephoto
               img(src=userProfile.photo, width='200', height='200')
-            div.player
-              h1.white #{userProfile.username}
+            if userProfile.isInactive
+              div.inactiveplayer
+                h1.red (Inactive)
+                h1.white #{userProfile.username}
+            else
+              div.player
+                h1.white #{userProfile.username}
             div.bigstats
               h2.white Rank 
-              h1.white #{userProfile.rank}
+              if userProfile.isInactive
+                h1.white --
+              else 
+                h1.white #{userProfile.rank}
               if userProfile.rank < userProfile.oriRank
                 h2.green (+#{userProfile.oriRank - userProfile.rank})
               else if userProfile.rank > userProfile.oriRank

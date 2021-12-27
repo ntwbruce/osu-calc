@@ -57,11 +57,21 @@ export async function getProfile(osu_id) {
 
   // Calculate pp components and profile accuracy factor
   const accFactor = accFactorCalc(userAcc, scores, userNumOfScores);
-  const totalPPNoBonus = ppCalc(scores, selection, userNumOfScores);
-  const totalPP = userData.statistics.pp;
-  const bonusPP = totalPP - totalPPNoBonus;
+  var totalPP;
+  var totalPPNoBonus;
+  var bonusPP;
+  var isInactive;
+  if (userRank) {
+    totalPP = userData.statistics.pp;
+    totalPPNoBonus = ppCalc(scores, selection, userNumOfScores);
+    bonusPP = totalPP - totalPPNoBonus;
+    isInactive = false;
+  } else {
+    totalPP = totalPPNoBonus = bonusPP = 0;
+    isInactive = true;
+  }
   
-  return {username, userAcc, userRank, userPhoto, userBanner, userNumOfScores, accFactor, scores, selection, totalPP, totalPPNoBonus, bonusPP};
+  return {username, userAcc, userRank, userPhoto, userBanner, userNumOfScores, accFactor, scores, selection, totalPP, totalPPNoBonus, bonusPP, isInactive};
   
 }
 

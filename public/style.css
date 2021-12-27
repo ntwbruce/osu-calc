@@ -234,6 +234,12 @@ table {
   color: white;
 }
 
+.inactiveplayer {
+  flex: 0 0 15%;
+  padding-top: 75px;
+  color: white;
+}
+
 .profilephoto {
   flex: 0 0 15%;
   padding-top: 25px;

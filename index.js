@@ -48,28 +48,29 @@ app.post("/scores/:id(\\d+)", async (req, res) => {
 
   if (isInit) {
 
-    var profile = await getProfile(currentUserId);
+    var profileData = await getProfile(currentUserId);
 
     playerMap.set(currentUserId, {
       profile: {
-        username: profile.username,
-        acc: profile.userAcc,
-        rank: profile.userRank,
-        totalPP: profile.totalPP,
-        photo: profile.userPhoto,
-        banner: profile.userBanner,
-        numOfScores: profile.userNumOfScores
+        username: profileData.username,
+        acc: profileData.userAcc,
+        rank: profileData.userRank,
+        totalPP: profileData.totalPP,
+        photo: profileData.userPhoto,
+        banner: profileData.userBanner,
+        numOfScores: profileData.userNumOfScores,
+        isInactive: profileData.isInactive
       },
-      scores: profile.scores,
-      selection: profile.selection,
+      scores: profileData.scores,
+      selection: profileData.selection,
       precalculated: {
-        factor: profile.accFactor,
-        bonusPP: profile.bonusPP
+        factor: profileData.accFactor,
+        bonusPP: profileData.bonusPP
       },
       calculated: {
-        acc: profile.userAcc,
-        totalPP: profile.totalPP,
-        rank: profile.userRank
+        acc: profileData.userAcc,
+        totalPP: profileData.totalPP,
+        rank: profileData.userRank
       }
     });
 
@@ -82,29 +83,33 @@ app.post("/scores/:id(\\d+)", async (req, res) => {
     var newSelection = currentData.selection;
     newSelection[changeID] = !(change === 'delete');
 
-    var newPP = ppCalc(currentData.scores, newSelection, currentData.profile.numOfScores) + currentData.precalculated.bonusPP;
+    if (!currentData.profile.isInactive) {
 
-    var newAcc;
-    var newRank;
-    if (currentData.profile.totalPP === newPP) {
-      newAcc = currentData.profile.acc;
-      newRank = currentData.profile.rank;
-    } else {
-      newAcc = accCalc(currentData.scores, newSelection, currentData.precalculated.factor, currentData.profile.numOfScores);
-      newRank = rankCalc(rankingData, newPP);
-    }
+      var newPP = ppCalc(currentData.scores, newSelection, currentData.profile.numOfScores) + currentData.precalculated.bonusPP;
 
-    playerMap.set(currentUserId, {
-      profile: currentData.profile,
-      scores: currentData.scores,
-      selection: newSelection,
-      precalculated: currentData.precalculated,
-      calculated: {
-        acc: newAcc,
-        totalPP: newPP,
-        rank: newRank
+      var newAcc;
+      var newRank;
+      if (currentData.profile.totalPP === newPP) {
+        newAcc = currentData.profile.acc;
+        newRank = currentData.profile.rank;
+      } else {
+        newAcc = accCalc(currentData.scores, newSelection, currentData.precalculated.factor, currentData.profile.numOfScores);
+        newRank = rankCalc(rankingData, newPP);
       }
-    });
+
+      playerMap.set(currentUserId, {
+        profile: currentData.profile,
+        scores: currentData.scores,
+        selection: newSelection,
+        precalculated: currentData.precalculated,
+        calculated: {
+          acc: newAcc,
+          totalPP: newPP,
+          rank: newRank
+        }
+      });
+
+    }
 
   }
 
@@ -120,6 +125,7 @@ app.post("/scores/:id(\\d+)", async (req, res) => {
       oriPP: dataToRender.profile.totalPP,
       photo: dataToRender.profile.photo,
       banner: dataToRender.profile.banner,
+      isInactive: dataToRender.profile.isInactive,
       
       data: dataToRender.scores,
       selection: dataToRender.selection,
