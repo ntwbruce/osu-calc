@@ -99,7 +99,7 @@ app.post("/scores/:id(\\d+)", async (req, res) => {
         newRank = currentData.profile.rank;
       } else {
         newAcc = accCalc(currentData.scores, newSelection, currentData.precalculated.factor, currentData.profile.numOfScores);
-        newRank = rankCalc(rankingData, newPP);
+        newRank = rankCalc(rankingData.countryData, rankingData.globalData, newPP);
       }
 
       playerMap.set(currentUserId, {

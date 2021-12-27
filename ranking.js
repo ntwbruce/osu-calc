@@ -10,14 +10,16 @@ export async function getRankingData() {
   // Get OAuth token
   const token = await get_token();
 
-  var data = [];
+  var countryData = [];
+  var globalData = [];
 
   for (var i = 0; i < 200; i++) {
-    data[i] = i;
+    countryData[i] = globalData[i] = i;
   }
 
   // asynchronously pull data from 200 pages of Singapore country ranking (holy shit it took me so long to realise i could just use Promise.all)
-  await Promise.all(data.map(async (i) => {
+  await Promise.all(
+  countryData.map(async (i) => {
     const getPageUrl = `${API_URL}/rankings/osu/performance?country=SG&page=${i + 1}#scores`;
     const pageResponse = await fetch(getPageUrl, {
       headers: {
@@ -27,13 +29,25 @@ export async function getRankingData() {
       }
     });
     const pageData = await pageResponse.json();
-    data[i] = pageData.ranking;
-  }))
+    countryData[i] = pageData.ranking;
+  }),
+  globalData.map(async (i) => {
+    const getPageUrl = `${API_URL}/rankings/osu/performance?page=${i + 1}#scores`;
+    const pageResponse = await fetch(getPageUrl, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    const pageData = await pageResponse.json();
+    globalData[i] = pageData.ranking;
+  }));
 
-  return data;
+  return { countryData, globalData };
 }
 
-export function rankCalc(data, pp) {
+export function rankCalc(country, global, pp) {
   var pageLow = 0;
   var pageHigh = 199;
   var pageMid;
@@ -41,11 +55,13 @@ export function rankCalc(data, pp) {
   var indexHigh = 49;
   var indexMid;
 
+  var leaderboardUsed = (global[pageHigh][indexHigh].pp < pp) ? global : country;
+
   while (pageLow < pageHigh) {
     pageMid = pageLow + Math.floor((pageHigh - pageLow) / 2);
-    if (data[pageMid][indexLow].pp < pp) {
+    if (leaderboardUsed[pageMid][indexLow].pp < pp) {
       pageHigh = pageMid - 1;
-    } else if (data[pageMid][indexHigh].pp > pp) {
+    } else if (leaderboardUsed[pageMid][indexHigh].pp > pp) {
       pageLow = pageMid + 1;
     } else {
       pageLow = pageMid;
@@ -55,13 +71,13 @@ export function rankCalc(data, pp) {
 
   while (indexLow < indexHigh) {
     indexMid = indexLow + Math.floor((indexHigh - indexLow) / 2);
-    if (data[pageLow][indexMid].pp < pp) {
+    if (leaderboardUsed[pageLow][indexMid].pp < pp) {
       indexHigh = indexMid - 1;
     } else {
       indexLow = indexMid + 1;
     }
   }
-  const approxRank = data[pageLow][indexLow].global_rank;
+  const approxRank = leaderboardUsed[pageLow][indexLow].global_rank;
   return approxRank;
 }
 
