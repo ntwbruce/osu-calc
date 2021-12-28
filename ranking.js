@@ -81,3 +81,7 @@ export function rankCalc(pp) {
   return approxRank;
 }
 
+export function isOnLeaderboard(pp) {
+  return rankingData.countryData[199][49].pp <= pp;
+}
+

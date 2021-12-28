@@ -2,7 +2,7 @@ import express from 'express';
 import path from 'path';
 import bodyParser from 'body-parser';
 import { ppCalc, accCalc } from './scores.js';
-import { fetchRankingData, rankCalc } from './ranking.js';
+import { fetchRankingData, isOnLeaderboard, rankCalc } from './ranking.js';
 import { getProfile } from './profile.js';
 
 const app = express();
@@ -71,7 +71,8 @@ app.post("/scores/:id(\\d+)", async (req, res) => {
         calculated: {
           acc: profileData.userAcc,
           totalPP: profileData.totalPP,
-          rank: profileData.userRank
+          rank: profileData.userRank,
+          isOnLeaderboard: profileData.onLeaderboard
         }
       });
 
@@ -91,7 +92,7 @@ app.post("/scores/:id(\\d+)", async (req, res) => {
     if (!currentData.profile.isInactive) {
 
       var newPP = ppCalc(currentData.scores, newSelection, currentData.profile.numOfScores) + currentData.precalculated.bonusPP;
-
+      var newIsOnLeaderboard = isOnLeaderboard(newPP);
       var newAcc;
       var newRank;
       if (currentData.profile.totalPP === newPP) {
@@ -99,7 +100,7 @@ app.post("/scores/:id(\\d+)", async (req, res) => {
         newRank = currentData.profile.rank;
       } else {
         newAcc = accCalc(currentData.scores, newSelection, currentData.precalculated.factor, currentData.profile.numOfScores);
-        newRank = rankCalc(newPP);
+        newRank = newIsOnLeaderboard ? rankCalc(newPP) : currentData.calculated.rank;
       }
 
       playerMap.set(currentUserId, {
@@ -110,7 +111,8 @@ app.post("/scores/:id(\\d+)", async (req, res) => {
         calculated: {
           acc: newAcc,
           totalPP: newPP,
-          rank: newRank
+          rank: newRank,
+          isOnLeaderboard: newIsOnLeaderboard
         }
       });
     }
@@ -139,6 +141,7 @@ app.post("/scores/:id(\\d+)", async (req, res) => {
         acc: dataToRender.calculated.acc,
         total: dataToRender.calculated.totalPP,
         rank: dataToRender.calculated.rank,
+        isOnLeaderboard: dataToRender.calculated.isOnLeaderboard
         
       }
     });

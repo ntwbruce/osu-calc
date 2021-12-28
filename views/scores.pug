@@ -22,14 +22,22 @@ block layout-content
               h2.white Rank 
               if userProfile.isInactive
                 h1.white --
+              else if !userProfile.isOnLeaderboard
+                h1.white ?
               else 
                 h1.white #{userProfile.rank}
-              if userProfile.rank < userProfile.oriRank
-                h2.green (+#{userProfile.oriRank - userProfile.rank})
-              else if userProfile.rank > userProfile.oriRank
-                h2.red (-#{userProfile.rank - userProfile.oriRank})
-              else  
-                h2.white (+0)
+              if userProfile.isOnLeaderboard
+                if userProfile.rank < userProfile.oriRank
+                  h2.green (+#{userProfile.oriRank - userProfile.rank})
+                else if userProfile.rank > userProfile.oriRank
+                  h2.red (-#{userProfile.rank - userProfile.oriRank})
+                else  
+                  h2.white (+0)
+              else 
+                if userProfile.total < userProfile.oriPP
+                  h2.red (-?)
+                else  
+                  h2.white (+?)
             div.bigstats
               h2.white Performance
               h1.white #{userProfile.total.toFixed(2)}pp

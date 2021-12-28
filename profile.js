@@ -1,6 +1,7 @@
 import fetch from 'node-fetch';
 import { get_token } from './token.js';
 import { ppCalc, accFactorCalc, scoreParser } from './scores.js';
+import { isOnLeaderboard } from './ranking.js';
 
 const API_URL = 'https://osu.ppy.sh/api/v2';
 
@@ -67,7 +68,10 @@ export async function getProfile(osu_id) {
     totalPP = totalPPNoBonus = bonusPP = 0;
     isInactive = true;
   }
+
+  // Check if rank calculations possible
+  const onLeaderboard = isOnLeaderboard(totalPP);
   
-  return {exists: true, username, userAcc, userRank, userPhoto, userBanner, userNumOfScores, accFactor, scores, selection, totalPP, totalPPNoBonus, bonusPP, isInactive};
+  return {exists: true, username, userAcc, userRank, userPhoto, userBanner, userNumOfScores, accFactor, scores, selection, totalPP, totalPPNoBonus, bonusPP, isInactive, onLeaderboard};
   
 }
