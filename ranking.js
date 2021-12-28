@@ -1,11 +1,11 @@
-import fetch from "node-fetch";
-import dotenv from "dotenv";
-import { get_token } from "./token.js";
-dotenv.config();
+import fetch from 'node-fetch';
+import { get_token } from './token.js';
 
 const API_URL = 'https://osu.ppy.sh/api/v2';
 
-export async function getRankingData() {
+var rankingData;
+
+export async function fetchRankingData() {
 
   // Get OAuth token
   const token = await get_token();
@@ -44,10 +44,10 @@ export async function getRankingData() {
     globalData[i] = pageData.ranking;
   }));
 
-  return { countryData, globalData };
+  rankingData = { countryData, globalData };
 }
 
-export function rankCalc(country, global, pp) {
+export function rankCalc(pp) {
   var pageLow = 0;
   var pageHigh = 199;
   var pageMid;
@@ -55,7 +55,7 @@ export function rankCalc(country, global, pp) {
   var indexHigh = 49;
   var indexMid;
 
-  var leaderboardUsed = (global[pageHigh][indexHigh].pp < pp) ? global : country;
+  var leaderboardUsed = (rankingData.globalData[pageHigh][indexHigh].pp < pp) ? rankingData.globalData : rankingData.countryData;
 
   while (pageLow < pageHigh) {
     pageMid = pageLow + Math.floor((pageHigh - pageLow) / 2);

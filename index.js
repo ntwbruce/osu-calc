@@ -1,8 +1,9 @@
 import express from 'express';
 import path from 'path';
 import bodyParser from 'body-parser';
-import { getProfile, ppCalc, accCalc } from './scores.js';
-import { getRankingData, rankCalc } from './ranking.js';
+import { ppCalc, accCalc } from './scores.js';
+import { fetchRankingData, rankCalc } from './ranking.js';
+import { getProfile } from './profile.js';
 
 const app = express();
 const port = process.env.PORT || "8000";
@@ -18,13 +19,12 @@ app.listen(port, () => {
   console.log(`Listening to requests on http://localhost:${port}`);
 });
 
-var rankingData;
 var currentDate;
 
 app.get("/", async (req, res) => {
   var today = new Date();
   if (!(currentDate instanceof Date) || currentDate.getFullYear() != today.getFullYear() || currentDate.getMonth() != today.getMonth() || currentDate.getDate() != today.getDate()) {
-    rankingData = await getRankingData();
+    await fetchRankingData();
     currentDate = today;
   }
   res.render("index", { title: "Delete My Scores", date: currentDate });
@@ -99,7 +99,7 @@ app.post("/scores/:id(\\d+)", async (req, res) => {
         newRank = currentData.profile.rank;
       } else {
         newAcc = accCalc(currentData.scores, newSelection, currentData.precalculated.factor, currentData.profile.numOfScores);
-        newRank = rankCalc(rankingData.countryData, rankingData.globalData, newPP);
+        newRank = rankCalc(newPP);
       }
 
       playerMap.set(currentUserId, {
