@@ -5,13 +5,13 @@ import { isOnLeaderboard } from './ranking.js';
 
 const API_URL = 'https://osu.ppy.sh/api/v2';
 
-export async function getProfile(osu_id) {
+export async function addProfile(userIdentifier, isById, playerMap) {
 
   // Get OAuth token
   const token = await get_token();
 
   // Get user data
-  const getUserUrl = `${API_URL}/users/${osu_id}/osu?key=id`;
+  const getUserUrl = isById ? `${API_URL}/users/${userIdentifier}/osu?key=id` : `${API_URL}/users/${userIdentifier}/osu?key=username`;
   const userResponse = await fetch(getUserUrl, {
     headers: {
       'Content-Type': 'application/json',
@@ -26,7 +26,8 @@ export async function getProfile(osu_id) {
   }
 
   // Get user profile details
-  const username = userData.username;
+  const userId = isById ? userIdentifier : userData.id;
+  const username = isById ? userData.username : userIdentifier;
   const userAcc = userData.statistics.hit_accuracy;
   const userRank = userData.statistics.global_rank;
   const userPhoto = userData.avatar_url;
@@ -34,7 +35,7 @@ export async function getProfile(osu_id) {
   const userNumOfScores = userData.scores_best_count;
 
   // Get data of user's 100 best scores
-  const scoresUrl = `${API_URL}/users/${osu_id}/scores/best?mode=osu&limit=${userNumOfScores}`;
+  const scoresUrl = `${API_URL}/users/${userId}/scores/best?mode=osu&limit=${userNumOfScores}`;
   const scoresResponse = await fetch(scoresUrl, {
     headers: {
       'Content-Type': 'application/json',
@@ -72,6 +73,30 @@ export async function getProfile(osu_id) {
   // Check if rank calculations possible
   const onLeaderboard = isOnLeaderboard(totalPP);
   
-  return {exists: true, username, userAcc, userRank, userPhoto, userBanner, userNumOfScores, accFactor, scores, selection, totalPP, totalPPNoBonus, bonusPP, isInactive, onLeaderboard};
-  
+  playerMap.set(userId.toString(), {
+    profile: {
+      username: username,
+      acc: userAcc,
+      rank: userRank,
+      totalPP: totalPP,
+      photo: userPhoto,
+      banner: userBanner,
+      numOfScores: userNumOfScores,
+      isInactive: isInactive
+    },
+    scores: scores,
+    selection: selection,
+    precalculated: {
+      factor: accFactor,
+      bonusPP: bonusPP
+    },
+    calculated: {
+      acc: userAcc,
+      totalPP: totalPP,
+      rank: userRank,
+      isOnLeaderboard: onLeaderboard
+    }
+  });
+
+  return {exists: true, userId: userId};
 }

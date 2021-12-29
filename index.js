@@ -3,7 +3,7 @@ import path from 'path';
 import bodyParser from 'body-parser';
 import { ppCalc, accCalc } from './scores.js';
 import { fetchRankingData, isOnLeaderboard, rankCalc } from './ranking.js';
-import { getProfile } from './profile.js';
+import { addProfile } from './profile.js';
 
 const app = express();
 const port = process.env.PORT || "8000";
@@ -34,57 +34,50 @@ var playerMap = new Map();
 
 app.post("/scores", async (req, res) => {
   try {
-    res.redirect(307, "/scores/" + req.body.osu_id);
+    if (req.body.osu_id) {
+      res.redirect(307, "/scores/" + req.body.osu_id);
+    } else {
+      res.redirect(307, "/scores/" + req.body.osu_username);
+    }
   } catch(e) {
     console.log(e);
     res.sendStatus(500);
   }
 });
 
-app.post("/scores/:id(\\d+)", async (req, res) => {
+app.post("/scores/:id", async (req, res) => {
 
   var isInit = req.body.init;
-  var currentUserId = req.body.osu_id;
+  var userIdentifier = req.params.id;
   var isScoreRender = true;
 
   if (isInit) {
-    var profileData = await getProfile(currentUserId);
 
-    if (profileData.exists) {
-      playerMap.set(currentUserId, {
-        profile: {
-          username: profileData.username,
-          acc: profileData.userAcc,
-          rank: profileData.userRank,
-          totalPP: profileData.totalPP,
-          photo: profileData.userPhoto,
-          banner: profileData.userBanner,
-          numOfScores: profileData.userNumOfScores,
-          isInactive: profileData.isInactive
-        },
-        scores: profileData.scores,
-        selection: profileData.selection,
-        precalculated: {
-          factor: profileData.accFactor,
-          bonusPP: profileData.bonusPP
-        },
-        calculated: {
-          acc: profileData.userAcc,
-          totalPP: profileData.totalPP,
-          rank: profileData.userRank,
-          isOnLeaderboard: profileData.onLeaderboard
+    if (userIdentifier === req.body.osu_id || userIdentifier === req.body.osu_username) {
+
+      var profileAdded;
+      if (userIdentifier === req.body.osu_username) {
+        profileAdded = await addProfile(userIdentifier, false, playerMap);
+      } else if (userIdentifier === req.body.osu_id) {
+        profileAdded = await addProfile(userIdentifier, true, playerMap);
+      }
+
+      if (profileAdded.exists) {
+        if (userIdentifier === req.body.osu_username) {
+          isScoreRender = false;
+          res.redirect(307, "/scores/" + profileAdded.userId);
         }
-      });
+      } else {
+        isScoreRender = false;
+        res.redirect("/scores/usernotfound");
+      }
 
-    } else {
-      isScoreRender = false;
-      res.redirect("/scores/usernotfound");
     }
 
   } else {
     var changeID = req.body.changeID;
     var change = req.body.change;
-    var currentData = playerMap.get(currentUserId);
+    var currentData = playerMap.get(userIdentifier);
 
     var newSelection = currentData.selection;
     newSelection[changeID] = !(change === 'delete');
@@ -103,7 +96,7 @@ app.post("/scores/:id(\\d+)", async (req, res) => {
         newRank = newIsOnLeaderboard ? rankCalc(newPP) : currentData.calculated.rank;
       }
 
-      playerMap.set(currentUserId, {
+      playerMap.set(userIdentifier, {
         profile: currentData.profile,
         scores: currentData.scores,
         selection: newSelection,
@@ -119,11 +112,11 @@ app.post("/scores/:id(\\d+)", async (req, res) => {
   }
 
   if (isScoreRender) {
-    var dataToRender = playerMap.get(currentUserId);
+    var dataToRender = playerMap.get(userIdentifier);
 
     res.render("scores", { title: "Delete My Scores",
       userProfile: { 
-        userid: currentUserId,
+        userid: userIdentifier,
 
         username: dataToRender.profile.username,
         oriacc: dataToRender.profile.acc,

@@ -10,8 +10,10 @@ block layout-content
       span.Details You can't really delete your scores but y'know what if you could.
       form(action='/scores', method='POST')
         p
-          | Insert your osu! ID here: 
-          input(type='number', name='osu_id', placeholder='eg. 15556259', min='1', required)
+          | Insert your osu! ID here:<br>
+          input(type='number', name='osu_id', placeholder='eg. 15556259', min='1')
+          <br><br>Alternatively, insert your osu! username:<br>
+          input(type='text', name='osu_username', placeholder='eg. begora_')
         input(type='hidden', name='init', value='init')
         input(type='submit', value='Submit')
       <br>
