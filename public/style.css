@@ -202,6 +202,7 @@ table {
 
 .map {
   text-align: left;
+  object-fit: cover;
 }
 
 .removedstats {
@@ -211,6 +212,7 @@ table {
 .removedmap {
   text-align: left;
   background-color: rgba(241, 49, 87, 0.877);
+  height: 68.19px;
 }
 
 .stats {

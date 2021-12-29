@@ -57,6 +57,7 @@ export function scoreParser(score) {
   const accuracy = score.accuracy;
   const rank = score.rank;
   const pp = score.pp;
+  const bg = score.beatmapset.covers.cover;
 
-  return {map, difficulty, mods, accuracy, rank, pp, isDifficultyChanged};
+  return {map, difficulty, mods, accuracy, rank, pp, isDifficultyChanged, bg};
 }
