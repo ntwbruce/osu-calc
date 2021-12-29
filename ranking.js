@@ -72,12 +72,12 @@ export function rankCalc(pp) {
   while (indexLow < indexHigh) {
     indexMid = indexLow + Math.floor((indexHigh - indexLow) / 2);
     if (leaderboardUsed[pageLow][indexMid].pp < pp) {
-      indexHigh = indexMid - 1;
+      indexHigh = indexMid;
     } else {
       indexLow = indexMid + 1;
     }
   }
-  const approxRank = leaderboardUsed[pageLow][indexLow].global_rank;
+  const approxRank = leaderboardUsed[pageLow][indexLow].global_rank - 1;
   return approxRank;
 }
 
