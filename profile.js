@@ -27,7 +27,7 @@ export async function addProfile(userIdentifier, isById, playerMap) {
 
   // Get user profile details
   const userId = isById ? userIdentifier : userData.id;
-  const username = isById ? userData.username : userIdentifier;
+  const username = userData.username;
   const userAcc = userData.statistics.hit_accuracy;
   const userRank = userData.statistics.global_rank;
   const userPhoto = userData.avatar_url;
