@@ -64,25 +64,19 @@ I'm not sure exactly how to go about fixing this at this time.
 
 Rank recalculations were probably the most scuffed of all of them. There is no way to obtain the rank corresponding to a given pp value or vice versa using the API. There is an [online tool](https://osudaily.net/ppbrowser.php) that can do that, but it is regrettably not open source so I am not sure how it works.
 
-The best way that I figured it could be done was to instead make rank estimations based on the Singapore country leaderboard. The current implementation uses the API to copy the entire SG leaderboard once a day, which is then used to estimate rank by finding the closest rank corresponding to the given pp value.
+The current implementation of ranking calculation uses the API to copy the entire Singapore country leaderboard and the global leaderboard once a day, which is then used to estimate rank by finding the closest rank corresponding to the given pp value.
 
-As for why the Singapore country leaderboard specifically and not the global leaderboard or other countries', 1) I'm Singaporean and 2) I think it covers a decent range of rank and pp values (ranks 113 down to ~729000, 14020 down to ~640pp) compared to using the global leaderboard or countries like the US where it's impossible to estimate ranks for players with lower rank/pp.
+As for why the Singapore country leaderboard specifically, 1) I'm Singaporean and 2) I think it covers a decent range of rank and pp values (ranks 113 down to ~729000, 14020 down to ~640pp) to complement the global leaderboard where it's impossible to estimate ranks for players with lower rank/pp.
 
 <hr>
 
 ### Limitations and future fixes
 
-This solution, while one that sort of works at the moment, has a lot of obvious issues. 
-
-Firstly, it's not a perfect estimate since it's unlikely there is a player for every possible pp value. For example:
+It's not a perfect estimate since it's unlikely there is a player for every possible pp value. For example:
 
 ![rank gap](public/rankgap.png)
 
 As of when this screenshot was taken, AceGain is at global rank 46008 with 5017pp while I (begora_) am at global rank 46055 with 5015pp. There is no way to accurately derive one specific rank in the range of 46008 to 46055 for a player with 5016pp, hence a slightly inaccurate estimate.
-
-Secondly, there is currently no way to find the rank of a player with greater than 14020pp (Demonical's pp) or less than 638pp (the pp at the #10000 on the leaderboard). In such cases, the estimated rank defaults to 113 (Demonical's rank) or ~729000 (#10000 on the leaderboard) respectively.
-
-As a fix for the players above rank 113, I'm looking into a working solution by getting the ranks/pp of players from the global leaderboard. There is no easy fix for the players below rank ~729000 however, but I'm thinking about using other country leaderboards.
 
 <hr>
 <hr>
