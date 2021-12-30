@@ -33,6 +33,7 @@ export async function addProfile(userIdentifier, isById, playerMap) {
   const userPhoto = userData.avatar_url;
   const userBanner = userData.cover_url;
   const userNumOfScores = userData.scores_best_count;
+  const userFlag = `https://okfn.org/assets/img/flags/svg/flag-${userData.country_code.toLowerCase()}.svg`;
 
   // Get data of user's 100 best scores
   const scoresUrl = `${API_URL}/users/${userId}/scores/best?mode=osu&limit=${userNumOfScores}`;
@@ -82,6 +83,7 @@ export async function addProfile(userIdentifier, isById, playerMap) {
       photo: userPhoto,
       banner: userBanner,
       numOfScores: userNumOfScores,
+      flag: userFlag,
       isInactive: isInactive
     },
     scores: scores,

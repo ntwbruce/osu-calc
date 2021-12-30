@@ -15,9 +15,11 @@ block layout-content
               div.inactiveplayer
                 h1.red (Inactive)
                 h1.white #{userProfile.username}
+                img(src=userProfile.flag, width='50', height='50')
             else
               div.player
                 h1.white #{userProfile.username}
+                img(src=userProfile.flag, width='50', height='50')
             div.bigstats
               h2.white Rank 
               if userProfile.isInactive

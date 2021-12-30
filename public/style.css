@@ -83,6 +83,7 @@ a {
   align-items: center;
 
   width: 100%;
+  height: 61px;
 
   border-radius: 10px;
 
@@ -232,13 +233,13 @@ table {
 
 .player {
   flex: 0 0 15%;
-  padding-top: 100px;
+  padding-top: 80px;
   color: white;
 }
 
 .inactiveplayer {
   flex: 0 0 15%;
-  padding-top: 75px;
+  padding-top: 60px;
   color: white;
 }
 

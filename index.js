@@ -124,6 +124,7 @@ app.post("/scores/:id", async (req, res) => {
         oriPP: dataToRender.profile.totalPP,
         photo: dataToRender.profile.photo,
         banner: dataToRender.profile.banner,
+        flag: dataToRender.profile.flag,
         isInactive: dataToRender.profile.isInactive,
         
         data: dataToRender.scores,
