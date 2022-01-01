@@ -17,7 +17,6 @@ export async function fetchRankingData() {
     countryData[i] = globalData[i] = i;
   }
 
-  // asynchronously pull data from 200 pages of Singapore country ranking (holy shit it took me so long to realise i could just use Promise.all)
   await Promise.all(
   countryData.map(async (i) => {
     const getPageUrl = `${API_URL}/rankings/osu/performance?country=SG&page=${i + 1}#scores`;

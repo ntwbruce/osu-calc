@@ -1,7 +1,7 @@
 extends layout
 
 block layout-content
-  div.View.WelcomeView
+  div.View.WelcomeView(style=`background-image: url(${bg})`)
     h1.Banner #{title}
     div.MessageFixed
       div.Title

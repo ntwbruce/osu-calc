@@ -1,4 +1,4 @@
 export function fetchBackground() {
-  return `/bg/${Math.round(Math.random() * 15)}.jpg`;
+  return `/bg/${Math.round(Math.random() * 16)}.jpg`;
 }
 

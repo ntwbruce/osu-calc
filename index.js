@@ -4,6 +4,7 @@ import bodyParser from 'body-parser';
 import { ppCalc, accCalc } from './scores.js';
 import { fetchRankingData, isOnLeaderboard, rankCalc } from './ranking.js';
 import { addProfile } from './profile.js';
+import { fetchBackground } from './background.js';
 
 const app = express();
 const port = process.env.PORT || "8000";
@@ -20,6 +21,7 @@ app.listen(port, () => {
 });
 
 var currentDate;
+var currentBackground;
 
 app.get("/", async (req, res) => {
   var today = new Date();
@@ -27,7 +29,8 @@ app.get("/", async (req, res) => {
     await fetchRankingData();
     currentDate = today;
   }
-  res.render("index", { title: "Delete My Scores", date: currentDate });
+  currentBackground = fetchBackground();
+  res.render("index", { title: "Delete Your Scores", date: currentDate, bg: currentBackground });
 });
 
 var playerMap = new Map();
@@ -114,7 +117,7 @@ app.post("/scores/:id", async (req, res) => {
   if (isScoreRender) {
     var dataToRender = playerMap.get(userIdentifier);
 
-    res.render("scores", { title: "Delete My Scores",
+    res.render("scores", { title: "Delete Your Scores",
       userProfile: { 
         userid: userIdentifier,
 
@@ -137,11 +140,12 @@ app.post("/scores/:id", async (req, res) => {
         rank: dataToRender.calculated.rank,
         isOnLeaderboard: dataToRender.calculated.isOnLeaderboard
         
-      }
+      },
+      bg: currentBackground
     });
   }
 });
 
 app.get("/scores/usernotfound", async (req, res) => {
-  res.render("usernotfound", { title: "Delete My Scores" });
+  res.render("usernotfound", { title: "Delete Your Scores", bg: currentBackground });
 });
