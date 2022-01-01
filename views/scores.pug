@@ -74,7 +74,7 @@ block layout-content
               if userProfile.selection[index]
                 tr
                   td.stats #{index + 1}
-                  td.map(style=`-webkit-background-size: cover; background-image: -webkit-cross-fade(url(data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7), url(${score.bg}), 20%)`)
+                  td.map(style=`-webkit-background-size: cover; background-image: -webkit-cross-fade(url(data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7), url(${score.bg}), 30%)`)
                     p #{score.map}
                   if score.isDifficultyChanged
                     td.stats #{(Math.round(100 * (score.difficulty + Number.EPSILON)) / 100).toFixed(2)}*
