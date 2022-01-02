@@ -1,27 +1,18 @@
-import express from 'express';
-import path from 'path';
-import bodyParser from 'body-parser';
 import { ppCalc, accCalc } from './scores.js';
 import { fetchRankingData, isOnLeaderboard, rankCalc } from './ranking.js';
 import { addProfile } from './profile.js';
 import { fetchBackground } from './background.js';
+import getApp from './app.js';
 
-const app = express();
 const port = process.env.PORT || "8000";
+const app = getApp();
 
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
-
-app.set("views", path.join(__dirname, "views"));
-app.set("view engine", "pug");
-app.use(express.static(path.join(__dirname, "public")));
-app.use(bodyParser.urlencoded({ extended: true }));
+var currentDate;
+var currentBackground;
 
 app.listen(port, () => {
   console.log(`Listening to requests on http://localhost:${port}`);
 });
-
-var currentDate;
-var currentBackground;
 
 app.get("/", async (req, res) => {
   var today = new Date();
