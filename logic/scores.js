@@ -55,7 +55,10 @@ export function scoreParser(score) {
   const mods = modsString;
 
   const accuracy = score.accuracy;
-  const rank = score.rank;
+  const rank = (score.rank === 'SH') ? 'S+' 
+             : (score.rank === 'X') ? 'SS' 
+             : (score.rank === 'XH') ? 'SS+' 
+             : score.rank;
   const pp = score.pp;
   const bg = score.beatmapset.covers.cover;
 
