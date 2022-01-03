@@ -1,7 +1,7 @@
-import { getProfile, setProfile, getBg } from "../data.js";
-import { addProfile } from "../profile.js";
-import { ppCalc, accCalc } from '../scores.js';
-import { isOnLeaderboard, rankCalc } from '../ranking.js';
+import { getProfile, setProfile, getBg } from "../logic/data.js";
+import { addProfile } from "../logic/profile.js";
+import { ppCalc, accCalc } from '../logic/scores.js';
+import { isOnLeaderboard, rankCalc } from '../logic/ranking.js';
 
 export async function redirect(req, res) {
   try {

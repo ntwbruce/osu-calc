@@ -1,6 +1,6 @@
-import { fetchRankingData } from '../ranking.js';
-import { fetchBackground } from '../background.js';
-import { getDate, setDate, setBg, getBg } from '../data.js';
+import { fetchRankingData } from '../logic/ranking.js';
+import { fetchBackground } from '../logic/background.js';
+import { getDate, setDate, setBg, getBg } from '../logic/data.js';
 
 export async function main(req, res) {
   const today = new Date();
