@@ -2,10 +2,11 @@ import fetch from 'node-fetch';
 import { get_token } from './token.js';
 import { ppCalc, accFactorCalc, scoreParser } from './scores.js';
 import { isOnLeaderboard } from './ranking.js';
+import { setProfile } from './data.js'
 
 const API_URL = 'https://osu.ppy.sh/api/v2';
 
-export async function addProfile(userIdentifier, isById, playerMap) {
+export async function addProfile(userIdentifier, isById) {
 
   // Get OAuth token
   const token = await get_token();
@@ -74,7 +75,7 @@ export async function addProfile(userIdentifier, isById, playerMap) {
   // Check if rank calculations possible
   const onLeaderboard = isOnLeaderboard(totalPP);
   
-  playerMap.set(userId.toString(), {
+  setProfile(userId.toString(), {
     profile: {
       username: username,
       acc: userAcc,
