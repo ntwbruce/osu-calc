@@ -16,7 +16,7 @@ some (if not all) calculations cannot be 100% accurate. This page details exactl
 
 Calculating for pp was probably the least troublesome out of the three. The formula and explanation for total raw (i.e without bonus) pp can be found on the osu! website [here](https://osu.ppy.sh/wiki/en/Performance_points#weightage-system), and essentially looks like this: 
 
-![totalpp](public/calculation/totalpp.png)
+![totalpp](../public/images/calculation/totalpp.png)
 
 The API only allows access to total overall pp (the one you see on your profile), so I first calculated the total raw pp using the formula above, and then the bonus pp is calculated by simply finding the difference between the two. There is actually a formula given for bonus pp [here](https://osu.ppy.sh/wiki/en/Performance_points#how-much-bonus-pp-is-awarded-for-having-lots-of-scores-on-ranked-maps?) that I did not use because it gives an incorrect value. As for why this formula for bonus pp and the one for raw pp above do not seem to add up, your guess is as good as mine. 
 
@@ -37,7 +37,7 @@ Not much can be done to mitigate this issue at this time.
 
 The best way to calculate overall accuracy was annoying to figure out for a number of reasons, the main one being that the osu! website does not give a specific formula, like for performance points. I did eventually manage to find [this](https://www.reddit.com/r/osugame/comments/ahdnre/comment/eedrmjl/?utm_source=share&utm_medium=web2x&context=3) comment by Magnus Cosmos on r/osugame who explains that the formula used to calculate overall accuracy is this: 
 
-![overallacc](public/calculation/overallacc.png)
+![overallacc](../public/images/calculation/overallacc.png)
 
 The comment also gives a link to the exact line in the osu! source code that he referenced, so check that out if you want to. 
 
@@ -74,7 +74,7 @@ As for why the Singapore country leaderboard specifically, 1) I'm Singaporean an
 
 It's not a perfect estimate since it's unlikely there is a player for every possible pp value. For example:
 
-![rank gap](public/calculation/rankgap.png)
+![rank gap](../public/images/calculation/rankgap.png)
 
 As of when this screenshot was taken, AceGain is at global rank 46008 with 5017pp while I (begora_) am at global rank 46055 with 5015pp. There is no way to accurately derive one specific rank in the range of 46008 to 46055 for a player with 5016pp, hence a slightly inaccurate estimate.
 
@@ -98,20 +98,20 @@ Number of ranked maps played (N<sub>1</sub>): 4600<br>
 
 Using [this](https://osu.ppy.sh/wiki/en/Performance_points#weightage-system) formula for raw pp:
 
-![totalpp](public/calculation/totalpp.png)<br>
+![totalpp](../public/images/calculation/totalpp.png)<br>
 
 Total raw pp: 4674.66632<br>
 Bonus pp: 340.61368<br>
 
 Working backwards to find N with [this](https://osu.ppy.sh/wiki/en/Performance_points#how-much-bonus-pp-is-awarded-for-having-lots-of-scores-on-ranked-maps?) formula:<br><br>
 
-![bonuspp](public/calculation/bonuspp.png)<br>
+![bonuspp](../public/images/calculation/bonuspp.png)<br>
 
 Number of ranked maps played (N<sub>2</sub>): 2833.91 ≈ 2834<br>
 
 Working backwards to find N with [this](https://github.com/ppy/osu-performance/blob/92b3eaf832f79eb3e0731c4ce75a8944a2e7b48f/src/performance/User.cpp#L63) formula:<br><br>
 
-![overallacc](public/calculation/overallacc.png)<br>
+![overallacc](../public/images/calculation/overallacc.png)<br>
 
 Number of ranked maps played (N<sub>3</sub>): 100.13 ≈ 100<br>
 
