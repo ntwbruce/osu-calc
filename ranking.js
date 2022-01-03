@@ -1,9 +1,8 @@
 import fetch from 'node-fetch';
 import { get_token } from './token.js';
+import { setRankingData, getRankingData } from './data.js';
 
 const API_URL = 'https://osu.ppy.sh/api/v2';
-
-var rankingData;
 
 export async function fetchRankingData() {
 
@@ -43,10 +42,12 @@ export async function fetchRankingData() {
     globalData[i] = pageData.ranking;
   }));
 
-  rankingData = { countryData, globalData };
+  setRankingData({ countryData, globalData });
 }
 
 export function rankCalc(pp) {
+  const rankingData = getRankingData();
+
   var pageLow = 0;
   var pageHigh = 199;
   var pageMid;
@@ -81,6 +82,7 @@ export function rankCalc(pp) {
 }
 
 export function isOnLeaderboard(pp) {
+  const rankingData = getRankingData();
   return rankingData.countryData[199][49].pp <= pp;
 }
 

@@ -1,6 +1,6 @@
 import { fetchRankingData } from '../ranking.js';
 import { fetchBackground } from '../background.js';
-import { getDate, setDate, setBg } from '../data.js';
+import { getDate, setDate, setBg, getBg } from '../data.js';
 
 export async function main(req, res) {
   const today = new Date();
@@ -9,7 +9,8 @@ export async function main(req, res) {
     await fetchRankingData();
     setDate(today);
   }
-  const currentBg = setBg(fetchBackground());
+  setBg(fetchBackground());
+  const updatedCurrentBg = getBg();
   const updatedCurrentDate = getDate();
-  res.render("index", { title: "Delete Your Scores", date: updatedCurrentDate, bg: currentBg });
+  res.render("index", { title: "Delete Your Scores", date: updatedCurrentDate, bg: updatedCurrentBg });
 };
