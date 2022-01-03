@@ -1,4 +1,4 @@
-import { playerMap, updateMap, currentBg } from "../data.js";
+import { getProfile, setProfile, getBg } from "../data.js";
 import { addProfile } from "../profile.js";
 import { ppCalc, accCalc } from '../scores.js';
 import { isOnLeaderboard, rankCalc } from '../ranking.js';
@@ -48,7 +48,7 @@ export async function generatePage(req, res) {
   } else {
     var changeID = req.body.changeID;
     var change = req.body.change;
-    var currentData = playerMap.get(userIdentifier);
+    var currentData = getProfile(userIdentifier);
 
     var newSelection = currentData.selection;
     newSelection[changeID] = !(change === 'delete');
@@ -67,7 +67,7 @@ export async function generatePage(req, res) {
         newRank = newIsOnLeaderboard ? rankCalc(newPP) : currentData.calculated.rank;
       }
 
-      updateMap(userIdentifier, {
+      setProfile(userIdentifier, {
         profile: currentData.profile,
         scores: currentData.scores,
         selection: newSelection,
@@ -83,7 +83,8 @@ export async function generatePage(req, res) {
   }
 
   if (isScoreRender) {
-    var dataToRender = playerMap.get(userIdentifier);
+    var dataToRender = getProfile(userIdentifier);
+    var currentBg = getBg();
 
     res.render("scores", { title: "Delete Your Scores",
       userProfile: { 
@@ -115,5 +116,6 @@ export async function generatePage(req, res) {
 };
 
 export async function notFound(req, res) {
+  var currentBg = getBg();
   res.render("usernotfound", { title: "Delete Your Scores", bg: currentBg });
 };

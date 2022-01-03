@@ -1,15 +1,27 @@
-export var currentDate;
-export var currentBg;
-export var playerMap = new Map();
+var currentDate;
+var currentBg;
+var profileMap = new Map();
 
-export function updateDate(newDate) {
+export function getDate() {
+  return currentDate;
+}
+
+export function setDate(newDate) {
   currentDate = newDate;
 }
 
-export function updateBg(newBg) {
+export function getBg() {
+  return currentBg;
+}
+
+export function setBg(newBg) {
   currentBg = newBg;
 }
 
-export function updateMap(key, newData) {
-  playerMap.set(key, newData);
+export function getProfile(key) {
+  return profileMap.get(key);
+}
+
+export function setProfile(key, newData) {
+  profileMap.set(key, newData);
 }
