@@ -1,3 +1,29 @@
+const ranks = {
+  'SS+': 0,
+  'SS': 1,
+  'S+': 2,
+  'S': 3,
+  'A': 4, 
+  'B': 5, 
+  'C': 6,
+  'D': 7
+};
+
+const mods = {
+  'EZ': 0.51,
+  'NF': 0.5,
+  'HT': 0.3,
+  'HR': 1.061,
+  'SD': 1.01, 
+  'PF': 1.02, 
+  'DT': 1.122,
+  'NC': 1.121,
+  'HD': 1.06, 
+  'FL': 1.12, 
+  'SO': 0.9,
+  'NM': 1
+};
+
 export function ppCalc(scores, selection, limit) {
   var total = 0;
   var index = 0;
@@ -63,4 +89,65 @@ export function scoreParser(score) {
   const bg = score.beatmapset.covers.cover;
 
   return {map, difficulty, mods, accuracy, rank, pp, isDifficultyChanged, bg};
+}
+
+export function orderDataSets(scores, selection, arrangement) {
+  var newScores = [];
+  var newSelection = [];
+  var scoresWIP = [];
+  for (var i = 0; i < scores.length; i++) {
+    scoresWIP.push({score: scores[i], isSelected: selection[i]});
+  }
+  switch(arrangement) {
+    case 'mods':
+      scoresWIP.sort((a, b) => compareMods(b, a));
+      break;
+    case 'mods-reverse':
+      scoresWIP.sort((a, b) => compareMods(a, b));
+      break;
+    case 'acc':
+      scoresWIP.sort((a, b) => b.score.accuracy - a.score.accuracy);
+      break;
+    case 'acc-reverse':
+      scoresWIP.sort((a, b) => a.score.accuracy - b.score.accuracy);
+      break;
+    case 'rank':
+      scoresWIP.sort((a, b) => compareRanks(a, b));
+      break;
+    case 'rank-reverse':
+      scoresWIP.sort((a, b) => compareRanks(b, a));
+      break;
+    case 'pp':
+      scoresWIP.sort((a, b) => b.score.pp - a.score.pp);
+      break;
+    case 'pp-reverse':
+      scoresWIP.sort((a, b) => a.score.pp - b.score.pp);
+      break;
+  }
+
+  for (var i = 0; i < scores.length; i++) {
+    newScores[i] = scoresWIP[i].score;
+    newSelection[i] = scoresWIP[i].isSelected;
+  }
+
+  return { newScores, newSelection };
+
+}
+
+function compareRanks(firstScore, secondScore) {
+  return ranks[firstScore.score.rank] - ranks[secondScore.score.rank];
+}
+
+function compareMods(firstScore, secondScore) {
+  var firstScoreMods = firstScore.score.mods.split(', ');
+  var secondScoreMods = secondScore.score.mods.split(', ');
+  var firstScoreMultiplier = 1;
+  var secondScoreMultiplier = 1;
+  for (var i = 0; i < firstScoreMods.length; i++) {
+    firstScoreMultiplier *= mods[firstScoreMods[i]];
+  }
+  for (var i = 0; i < secondScoreMods.length; i++) {
+    secondScoreMultiplier *= mods[secondScoreMods[i]];
+  }
+  return firstScoreMultiplier - secondScoreMultiplier;
 }
