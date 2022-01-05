@@ -69,7 +69,7 @@ export async function generatePage(req, res) {
     var currentData = getProfile(userIdentifier);
 
     var newSelection = currentData.selection;
-    newSelection[changeID] = !(change === 'delete');
+    newSelection[changeID] = !(change === 'Delete');
 
     if (!currentData.profile.isInactive) {
 
@@ -120,6 +120,7 @@ export async function generatePage(req, res) {
         
         data: dataToRender.scores,
         selection: dataToRender.selection,
+        arrangement: dataToRender.arrangement,
         
         bonus: dataToRender.precalculated.bonusPP,
 

@@ -65,26 +65,30 @@ block layout-content
               th #
               th.map Map
               th.stats Star Rating
-              th.stats Mods
+              th.stats
                 form(action='/scores', method='POST')
                   input(type='hidden', name='osu_id', value=userProfile.userid)
                   input(type='hidden', name='command', value='arrange')
-                  input(type='submit', name='arrangement', value='mods')
-              th.stats Accuracy(%)
+                  input(type='hidden', name='arrangement', value='mods')
+                  input(type='submit', name='display', value=`Mods${userProfile.arrangement === 'mods' ? ' ↓' : userProfile.arrangement === 'mods-reverse' ? ' ↑' : ''}`)
+              th.stats
                 form(action='/scores', method='POST')
                   input(type='hidden', name='osu_id', value=userProfile.userid)
                   input(type='hidden', name='command', value='arrange')
-                  input(type='submit', name='arrangement', value='acc')
-              th.stats Rank
+                  input(type='hidden', name='arrangement', value='acc')
+                  input(type='submit', name='display', value=`Accuracy${userProfile.arrangement === 'acc' ? ' ↓' : userProfile.arrangement === 'acc-reverse' ? ' ↑' : ''}`)
+              th.stats
                 form(action='/scores', method='POST')
                   input(type='hidden', name='osu_id', value=userProfile.userid)
                   input(type='hidden', name='command', value='arrange')
-                  input(type='submit', name='arrangement', value='rank')
-              th.stats pp
+                  input(type='hidden', name='arrangement', value='rank')
+                  input(type='submit', name='display', value=`Rank${userProfile.arrangement === 'rank' ? ' ↓' : userProfile.arrangement === 'rank-reverse' ? ' ↑' : ''}`)
+              th.stats
                 form(action='/scores', method='POST')
                   input(type='hidden', name='osu_id', value=userProfile.userid)
                   input(type='hidden', name='command', value='arrange')
-                  input(type='submit', name='arrangement', value='pp')
+                  input(type='hidden', name='arrangement', value='pp')
+                  input(type='submit', name='display', value=`pp${userProfile.arrangement === 'pp' ? ' ↓' : userProfile.arrangement === 'pp-reverse' ? ' ↑' : ''}`)
               th.stats Delete
           tbody
             each score, index in userProfile.data
@@ -105,8 +109,7 @@ block layout-content
                     form(action='/scores', method='POST')
                       input(type='hidden', name='osu_id', value=userProfile.userid)
                       input(type='hidden', name='changeID', value=index)
-                      input(type='hidden', name='command', value='delete')
-                      input(type='submit', name='change', value='delete')
+                      input(type='submit', name='change', value='Delete')
               else 
                 tr
                   td.removedstats #{index + 1}
@@ -123,8 +126,7 @@ block layout-content
                     form(action='/scores', method='POST')
                         input(type='hidden', name='osu_id', value=userProfile.userid)
                         input(type='hidden', name='changeID', value=index)
-                        input(type='hidden', name='command', value='undelete')
-                        input(type='submit', name='change', value='undelete')
+                        input(type='submit', name='change', value='Undelete')
 
     div.NavButtons
       a(href="/")
