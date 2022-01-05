@@ -27,9 +27,10 @@ const mods = {
 export function ppCalc(scores, selection, limit) {
   var total = 0;
   var index = 0;
+  var { newScores, newSelection } = orderDataSets(scores, selection, 'pp');
   for (var i = 0; i < limit; i++) {
-    if (selection[i]) {
-      total += scores[i].pp * Math.pow(0.95, index);
+    if (newSelection[i]) {
+      total += newScores[i].pp * Math.pow(0.95, index);
       index++;
     }
   }
@@ -39,9 +40,10 @@ export function ppCalc(scores, selection, limit) {
 export function accCalc(scores, selection, factor, limit) {
   var total = 0;
   var index = 0;
+  var { newScores, newSelection } = orderDataSets(scores, selection, 'pp');
   for (var i = 0; i < limit; i++) {
-    if (selection[i]) {
-      total += scores[i].accuracy * Math.pow(0.95, index);
+    if (newSelection[i]) {
+      total += newScores[i].accuracy * Math.pow(0.95, index);
       index++;
     }
   }
@@ -94,40 +96,40 @@ export function scoreParser(score) {
 export function orderDataSets(scores, selection, arrangement) {
   var newScores = [];
   var newSelection = [];
-  var scoresWIP = [];
+  var workingArr = [];
   for (var i = 0; i < scores.length; i++) {
-    scoresWIP.push({score: scores[i], isSelected: selection[i]});
+    workingArr.push({score: scores[i], isSelected: selection[i]});
   }
   switch(arrangement) {
     case 'mods':
-      scoresWIP.sort((a, b) => compareMods(b, a));
+      workingArr.sort((a, b) => compareMods(b, a));
       break;
     case 'mods-reverse':
-      scoresWIP.sort((a, b) => compareMods(a, b));
+      workingArr.sort((a, b) => compareMods(a, b));
       break;
     case 'acc':
-      scoresWIP.sort((a, b) => b.score.accuracy - a.score.accuracy);
+      workingArr.sort((a, b) => b.score.accuracy - a.score.accuracy);
       break;
     case 'acc-reverse':
-      scoresWIP.sort((a, b) => a.score.accuracy - b.score.accuracy);
+      workingArr.sort((a, b) => a.score.accuracy - b.score.accuracy);
       break;
     case 'rank':
-      scoresWIP.sort((a, b) => compareRanks(a, b));
+      workingArr.sort((a, b) => compareRanks(a, b));
       break;
     case 'rank-reverse':
-      scoresWIP.sort((a, b) => compareRanks(b, a));
+      workingArr.sort((a, b) => compareRanks(b, a));
       break;
     case 'pp':
-      scoresWIP.sort((a, b) => b.score.pp - a.score.pp);
+      workingArr.sort((a, b) => b.score.pp - a.score.pp);
       break;
     case 'pp-reverse':
-      scoresWIP.sort((a, b) => a.score.pp - b.score.pp);
+      workingArr.sort((a, b) => a.score.pp - b.score.pp);
       break;
   }
 
-  for (var i = 0; i < scores.length; i++) {
-    newScores[i] = scoresWIP[i].score;
-    newSelection[i] = scoresWIP[i].isSelected;
+  for (var i = 0; i < workingArr.length; i++) {
+    newScores[i] = workingArr[i].score;
+    newSelection[i] = workingArr[i].isSelected;
   }
 
   return { newScores, newSelection };
