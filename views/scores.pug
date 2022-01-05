@@ -65,9 +65,30 @@ block layout-content
               th #
               th.map Map
               th.stats Star Rating
-              th.stats Mods
-              th.stats Accuracy(%) / Rank
-              th.stats pp
+              th.stats
+                form(action='/scores', method='POST')
+                  input(type='hidden', name='osu_id', value=userProfile.userid)
+                  input(type='hidden', name='command', value='arrange')
+                  input(type='hidden', name='arrangement', value='mods')
+                  input(type='submit', name='display', value=`Mods${userProfile.arrangement === 'mods' ? ' ↓' : userProfile.arrangement === 'mods-reverse' ? ' ↑' : ''}`)
+              th.stats
+                form(action='/scores', method='POST')
+                  input(type='hidden', name='osu_id', value=userProfile.userid)
+                  input(type='hidden', name='command', value='arrange')
+                  input(type='hidden', name='arrangement', value='acc')
+                  input(type='submit', name='display', value=`Accuracy${userProfile.arrangement === 'acc' ? ' ↓' : userProfile.arrangement === 'acc-reverse' ? ' ↑' : ''}`)
+              th.stats
+                form(action='/scores', method='POST')
+                  input(type='hidden', name='osu_id', value=userProfile.userid)
+                  input(type='hidden', name='command', value='arrange')
+                  input(type='hidden', name='arrangement', value='rank')
+                  input(type='submit', name='display', value=`Rank${userProfile.arrangement === 'rank' ? ' ↓' : userProfile.arrangement === 'rank-reverse' ? ' ↑' : ''}`)
+              th.stats
+                form(action='/scores', method='POST')
+                  input(type='hidden', name='osu_id', value=userProfile.userid)
+                  input(type='hidden', name='command', value='arrange')
+                  input(type='hidden', name='arrangement', value='pp')
+                  input(type='submit', name='display', value=`pp${userProfile.arrangement === 'pp' ? ' ↓' : userProfile.arrangement === 'pp-reverse' ? ' ↑' : ''}`)
               th.stats Delete
           tbody
             each score, index in userProfile.data
@@ -81,14 +102,14 @@ block layout-content
                   else 
                     td.stats #{(Math.round(100 * (score.difficulty + Number.EPSILON)) / 100).toFixed(2)}
                   td.stats #{score.mods}
-                  td.stats #{(Math.round(100 * (100 * score.accuracy + Number.EPSILON)) / 100).toFixed(2)} / #{score.rank}
+                  td.stats #{(Math.round(100 * (100 * score.accuracy + Number.EPSILON)) / 100).toFixed(2)}
+                  td.stats #{score.rank}
                   td.stats #{(Math.round(100 * (score.pp + Number.EPSILON)) / 100).toFixed(2)}
                   td.stats
                     form(action='/scores', method='POST')
                       input(type='hidden', name='osu_id', value=userProfile.userid)
                       input(type='hidden', name='changeID', value=index)
-                      input(type='hidden', name='init', value='')
-                      input(type='submit', name='change', value='delete')
+                      input(type='submit', name='change', value='Delete')
               else 
                 tr
                   td.removedstats #{index + 1}
@@ -98,14 +119,14 @@ block layout-content
                   else
                     td.removedstats #{(Math.round(100 * (score.difficulty + Number.EPSILON)) / 100).toFixed(2)}
                   td.removedstats #{score.mods}
-                  td.removedstats #{(Math.round(100 * (100 * score.accuracy + Number.EPSILON)) / 100).toFixed(2)} / #{score.rank}
+                  td.removedstats #{(Math.round(100 * (100 * score.accuracy + Number.EPSILON)) / 100).toFixed(2)} 
+                  td.removedstats #{score.rank}
                   td.removedstats #{(Math.round(100 * (score.pp + Number.EPSILON)) / 100).toFixed(2)}
                   td.removedbutton
                     form(action='/scores', method='POST')
                         input(type='hidden', name='osu_id', value=userProfile.userid)
                         input(type='hidden', name='changeID', value=index)
-                        input(type='hidden', name='init', value='')
-                        input(type='submit', name='change', value='undelete')
+                        input(type='submit', name='change', value='Undelete')
 
     div.NavButtons
       a(href="/")

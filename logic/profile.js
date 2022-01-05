@@ -89,6 +89,7 @@ export async function addProfile(userIdentifier, isById) {
     },
     scores: scores,
     selection: selection,
+    arrangement: 'pp',
     precalculated: {
       factor: accFactor,
       bonusPP: bonusPP

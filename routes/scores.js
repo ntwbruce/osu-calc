@@ -1,6 +1,6 @@
 import { getProfile, setProfile, getBg } from "../logic/data.js";
 import { addProfile } from "../logic/profile.js";
-import { ppCalc, accCalc } from '../logic/scores.js';
+import { ppCalc, accCalc, orderDataSets } from '../logic/scores.js';
 import { isOnLeaderboard, rankCalc } from '../logic/ranking.js';
 
 export async function redirect(req, res) {
@@ -18,11 +18,11 @@ export async function redirect(req, res) {
 
 export async function generatePage(req, res) {
 
-  var isInit = req.body.init;
+  var command = req.body.command;
   var userIdentifier = req.params.id;
   var isScoreRender = true;
 
-  if (isInit) {
+  if (command === 'init') {
 
     if (userIdentifier === req.body.osu_id || userIdentifier === req.body.osu_username) {
 
@@ -45,13 +45,31 @@ export async function generatePage(req, res) {
 
     }
 
+  } else if (command === 'arrange') {
+    var newArrangement = req.body.arrangement;
+    var currentData = getProfile(userIdentifier);
+    var currentArrangement = currentData.arrangement;
+    if (newArrangement === currentArrangement) {
+      newArrangement = `${newArrangement}-reverse`;
+    } 
+    var { newScores, newSelection } = orderDataSets(currentData.scores, currentData.selection, newArrangement);
+
+    setProfile(userIdentifier, {
+      profile: currentData.profile,
+      scores: newScores,
+      selection: newSelection,
+      arrangement: newArrangement,
+      precalculated: currentData.precalculated,
+      calculated: currentData.calculated
+    });
+
   } else {
     var changeID = req.body.changeID;
     var change = req.body.change;
     var currentData = getProfile(userIdentifier);
 
     var newSelection = currentData.selection;
-    newSelection[changeID] = !(change === 'delete');
+    newSelection[changeID] = !(change === 'Delete');
 
     if (!currentData.profile.isInactive) {
 
@@ -71,6 +89,7 @@ export async function generatePage(req, res) {
         profile: currentData.profile,
         scores: currentData.scores,
         selection: newSelection,
+        arrangement: currentData.arrangement,
         precalculated: currentData.precalculated,
         calculated: {
           acc: newAcc,
@@ -101,6 +120,7 @@ export async function generatePage(req, res) {
         
         data: dataToRender.scores,
         selection: dataToRender.selection,
+        arrangement: dataToRender.arrangement,
         
         bonus: dataToRender.precalculated.bonusPP,
 
