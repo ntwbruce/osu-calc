@@ -19,8 +19,6 @@ The API only allows access to total overall pp (the one you see on your profile)
 
 The way pp is recalculated by this program when you 'delete' scores is just to use the formula above but exclude those scores that have been 'deleted', then add the precalculated bonus pp. 
 
-<hr>
-
 ### Limitations and future fixes
 
 Were you to delete your top score for example, each of your top plays shifts up by 1 spot. What this means is that your 101<sup>st</sup> top play becomes your 100<sup>th</sup> and should be included in the calculation. However, the API only allows access to your top 100 plays, meaning the pp that would come from the 101<sup>st</sup>-turned-100<sup>th</sup> play cannot be obtained, so deleting one play means the new pp is calculated with only 99 plays. This is not a big issue if only a few plays are removed (the bottom few plays are scaled by 0.95<sup>99</sup>, 0.95<sup>98</sup>, etc, so not being able to include a few is relatively inconsequential), but the more plays you 'delete', the less accurate the recalculated pp value is going to be.
