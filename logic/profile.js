@@ -6,6 +6,13 @@ import { setProfile } from './data.js'
 
 const API_URL = 'https://osu.ppy.sh/api/v2';
 
+/**
+ * Adds a profile to the database.
+ * 
+ * @param {String} userIdentifier User ID or username.
+ * @param {Boolean} isById identifies if userIdentifier is a user ID or username.
+ * @returns an Object with parameter for profile existence, and if it does, another parameter for user ID.
+ */
 export async function addProfile(userIdentifier, isById) {
 
   // Get OAuth token
@@ -22,6 +29,7 @@ export async function addProfile(userIdentifier, isById) {
   });
   const userData = await userResponse.json();
 
+  // Returns object with false exists parameter if profile does not exist
   if (userData.error === null) {
     return {exists: false};
   }
@@ -36,7 +44,7 @@ export async function addProfile(userIdentifier, isById) {
   const userNumOfScores = userData.scores_best_count;
   const userFlag = `https://okfn.org/assets/img/flags/svg/flag-${userData.country_code.toLowerCase()}.svg`;
 
-  // Get data of user's 100 best scores
+  // Get data of user's top scores
   const scoresUrl = `${API_URL}/users/${userId}/scores/best?mode=osu&limit=${userNumOfScores}`;
   const scoresResponse = await fetch(scoresUrl, {
     headers: {
@@ -56,11 +64,13 @@ export async function addProfile(userIdentifier, isById) {
     selection[i] = true;
   }
 
-  // Calculate pp components and profile accuracy factor
+  // Obtain required values for further calculation (when deleting, undeleting)
   const accFactor = accFactorCalc(userAcc, scores, userNumOfScores);
   var totalPP;
   var totalPPNoBonus;
   var bonusPP;
+  
+  // if userRank is null, profile is inactive
   var isInactive;
   if (userRank) {
     totalPP = userData.statistics.pp;
@@ -72,7 +82,7 @@ export async function addProfile(userIdentifier, isById) {
     isInactive = true;
   }
 
-  // Check if rank calculations possible
+  // Check if rank calculations are possible
   const onLeaderboard = isOnLeaderboard(totalPP);
   
   setProfile(userId.toString(), {
