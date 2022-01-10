@@ -8,8 +8,8 @@ import { isOnLeaderboard, rankCalc } from '../logic/ranking.js';
  * If user submitted a user ID, the osu_id parameter will contain that value.
  * If user submitted a username, the osu_username parameter will contain that value.
  * 
- * @param {*} req is the HTTP request containing user input.
- * @param {*} res is the HTTP response.
+ * @param {Object} req is the HTTP request containing user input.
+ * @param {Object} res is the HTTP response.
  */
 export async function redirect(req, res) {
   try {
@@ -27,8 +27,8 @@ export async function redirect(req, res) {
 /**
  * Generates scores page.
  * 
- * @param {*} req is the HTTP request containing user input forwarded by redirect function.
- * @param {*} res is the HTTP response.
+ * @param {Object} req is the HTTP request containing user input forwarded by redirect function.
+ * @param {Object} res is the HTTP response.
  */
 export async function generatePage(req, res) {
 
@@ -170,8 +170,8 @@ export async function generatePage(req, res) {
 /**
  * Generates user not found page.
  * 
- * @param {*} req is the HTTP request.
- * @param {*} res is the HTTP response.
+ * @param {Object} req is the HTTP request.
+ * @param {Object} res is the HTTP response.
  */
 export async function notFound(req, res) {
   var currentBg = getBg();

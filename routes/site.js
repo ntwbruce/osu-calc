@@ -5,8 +5,8 @@ import { getDate, setDate, setBg, getBg } from '../logic/data.js';
 /**
  * Renders main page.
  * 
- * @param {*} req is the HTTP request.
- * @param {*} res is the HTTP response.
+ * @param {Object} req is the HTTP request.
+ * @param {Object} res is the HTTP response.
  */
 export async function main(req, res) {
   // Fetch ranking data at 12am daily
