@@ -9,9 +9,6 @@ Due to limitations of
 
 some (if not all) calculations cannot be 100% accurate. This page details exactly how the calculator works, and assumptions, compromises, and workarounds made. 
 
-<hr>
-<hr>
-
 ## Calculating performance points (pp) 
 
 Calculating for pp was probably the least troublesome out of the three. The formula and explanation for total raw (i.e without bonus) pp can be found on the osu! website [here](https://osu.ppy.sh/wiki/en/Performance_points#weightage-system), and essentially looks like this: 
@@ -30,9 +27,6 @@ Were you to delete your top score for example, each of your top plays shifts up 
 
 Not much can be done to mitigate this issue at this time.
 
-<hr>
-<hr>
-
 ## Calculating overall accuracy
 
 The best way to calculate overall accuracy was annoying to figure out for a number of reasons, the main one being that the osu! website does not give a specific formula, like for performance points. I did eventually manage to find [this](https://www.reddit.com/r/osugame/comments/ahdnre/comment/eedrmjl/?utm_source=share&utm_medium=web2x&context=3) comment by Magnus Cosmos on r/osugame who explains that the formula used to calculate overall accuracy is this: 
@@ -49,16 +43,11 @@ The comment also gives a link to the exact line in the osu! source code that he 
 
 More details can be found in the appendix below if you're interested, but in short, experimenting with values obtained by methods 1 and 2 resulted in inaccurate values. Hence, by method 3, the player's overall accuracy is plugged into the above equation which is then solved for the value of N. This value is then used for subsequent calculations of overall accuracy.
 
-<hr>
-
 ### Limitations and future fixes
 
 The main limitation with this solution essentially that of the pp calculation: deleting more plays will result in a more inaccurate estimation of overall accuracy. The effect can be seen in the fact that the more plays you delete, the lower your accuracy is, even if you're only removing low accuracy plays.
 
 I'm not sure exactly how to go about fixing this at this time.
-
-<hr>
-<hr>
 
 ## Calculating rank
 
@@ -68,8 +57,6 @@ The current implementation of ranking calculation uses the API to copy the entir
 
 As for why the Singapore country leaderboard specifically, 1) I'm Singaporean and 2) I think it covers a decent range of rank and pp values (ranks 113 down to ~729000, 14020 down to ~640pp) to complement the global leaderboard where it's impossible to estimate ranks for players with lower rank/pp.
 
-<hr>
-
 ### Limitations and future fixes
 
 It's not a perfect estimate since it's unlikely there is a player for every possible pp value. For example:
@@ -78,15 +65,9 @@ It's not a perfect estimate since it's unlikely there is a player for every poss
 
 As of when this screenshot was taken, AceGain is at global rank 46008 with 5017pp while I (begora_) am at global rank 46055 with 5015pp. There is no way to accurately derive one specific rank in the range of 46008 to 46055 for a player with 5016pp, hence a slightly inaccurate estimate.
 
-<hr>
-<hr>
-
 ## Issues
 
 If you have any questions about/suggestions for/issues with the current implementation, feel free to open an issue [here](https://github.com/ntwbruce/osu-calc/issues).
-
-<hr>
-<hr>
 
 ## Appendix: Accuracy calculations
 
