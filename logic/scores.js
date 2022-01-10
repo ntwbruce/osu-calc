@@ -1,13 +1,13 @@
 // Values used for rank comparison calculation (for arranging scores by ranks)
 const ranks = {
-  'SS+': 0,
-  'SS': 1,
-  'S+': 2,
-  'S': 3,
-  'A': 4, 
-  'B': 5, 
-  'C': 6,
-  'D': 7
+  'SS+': 7,
+  'SS': 6,
+  'S+': 5,
+  'S': 4,
+  'A': 3, 
+  'B': 2, 
+  'C': 1,
+  'D': 0
 };
 
 // Values used for mods comparison calculation (for arranging scores by mods)
@@ -168,10 +168,10 @@ export function orderDataSets(scores, selection, arrangement) {
       workingArr.sort((a, b) => a.score.accuracy - b.score.accuracy);
       break;
     case 'rank':
-      workingArr.sort((a, b) => compareRanks(a, b));
+      workingArr.sort((a, b) => compareRanks(b, a));
       break;
     case 'rank-reverse':
-      workingArr.sort((a, b) => compareRanks(b, a));
+      workingArr.sort((a, b) => compareRanks(a, b));
       break;
     case 'pp':
       workingArr.sort((a, b) => b.score.pp - a.score.pp);
