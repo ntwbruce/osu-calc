@@ -1,3 +1,4 @@
+// Values used for rank comparison calculation (for arranging scores by ranks)
 const ranks = {
   'SS+': 0,
   'SS': 1,
@@ -9,6 +10,7 @@ const ranks = {
   'D': 7
 };
 
+// Values used for mods comparison calculation (for arranging scores by mods)
 const mods = {
   'EZ': 0.51,
   'NF': 0.5,
@@ -24,10 +26,21 @@ const mods = {
   'NM': 1
 };
 
+/**
+ * Calculates raw pp value (without bonus) based on current selection of scores.
+ * 
+ * @param {Object[]} scores from user profile used to calculate total pp.
+ * @param {Boolean[]} selection of scores to include in the calculation.
+ * @param {Number} limit on the number of scores to use in the calculation.
+ * @returns new raw pp value.
+ */
 export function ppCalc(scores, selection, limit) {
   var total = 0;
   var index = 0;
+
+  // Reorder according to pp value 
   var { newScores, newSelection } = orderDataSets(scores, selection, 'pp');
+
   for (var i = 0; i < limit; i++) {
     if (newSelection[i]) {
       total += newScores[i].pp * Math.pow(0.95, index);
@@ -37,6 +50,15 @@ export function ppCalc(scores, selection, limit) {
   return total;
 }
 
+/**
+ * Calculates profile accuracy based on current selection of scores.
+ * 
+ * @param {Object[]} scores from user profile used to calculate profile accuracy.
+ * @param {Boolean[]} selection of scores to include in the calculation.
+ * @param {Number} factor precalculated for use in accuracy calculation.
+ * @param {Number} limit on the number of scores to use in the calculation.
+ * @returns new profile accuracy.
+ */
 export function accCalc(scores, selection, factor, limit) {
   var total = 0;
   var index = 0;
@@ -50,6 +72,16 @@ export function accCalc(scores, selection, factor, limit) {
   return total * 100 / (20 * (1 - Math.pow(0.95, factor)));
 }
 
+/**
+ * Calculates profile accuracy factor. 
+ * Accuracy calculation uses this profile accuracy factor.
+ * For more details why it is necessary and why it is calculated as such, refer to Calculations.md under docs.
+ * 
+ * @param {Number} userAcc directly from profile.
+ * @param {Object[]} scores used in the accuracy factor calculation.
+ * @param {Number} limit on the number of scores to use in the calculation.
+ * @returns profile accuracy factor.
+ */
 export function accFactorCalc(userAcc, scores, limit) {
   var total = 0;
   var index = 0;
@@ -60,19 +92,32 @@ export function accFactorCalc(userAcc, scores, limit) {
   return Math.log(1 - 5 * (total / userAcc)) / Math.log(0.95);
 }
 
+/**
+ * Parses score data from API.
+ * 
+ * @param {Object} score to parse.
+ * @returns Object containing values for calculation and display on scores page.
+ */
 export function scoreParser(score) {
   const map = `${score.beatmapset.artist} - ${score.beatmapset.title} [${score.beatmap.version}]`;
   const difficulty = score.beatmap.difficulty_rating;
 
   var isDifficultyChanged = false;
   var modsString;
+
+  // No mods
   if (score.mods.length === 0) {
     modsString = "NM";
+
   } else {
     for (var i = 0; i < score.mods.length; i++) {
+
+      // Set boolean if star rating is changed
       if (!isDifficultyChanged && ["EZ", "HR", "DT", "NC", "FL"].includes(score.mods[i])) {
         isDifficultyChanged = true;
       }
+
+      // Create mod string
       if (i === 0) {
         modsString = `${score.mods[i]}`;
       } else {
@@ -93,6 +138,14 @@ export function scoreParser(score) {
   return {map, difficulty, mods, accuracy, rank, pp, isDifficultyChanged, bg};
 }
 
+/**
+ * Order scores according to given arrangement.
+ * 
+ * @param {Object[]} scores to be rearranged.
+ * @param {Boolean[]} selection array to be rearranged.
+ * @param {String} arrangement by which to reorder scores.
+ * @returns Object with both updated score and selection arrays.
+ */
 export function orderDataSets(scores, selection, arrangement) {
   var newScores = [];
   var newSelection = [];
@@ -100,6 +153,7 @@ export function orderDataSets(scores, selection, arrangement) {
   for (var i = 0; i < scores.length; i++) {
     workingArr.push({score: scores[i], isSelected: selection[i]});
   }
+
   switch(arrangement) {
     case 'mods':
       workingArr.sort((a, b) => compareMods(b, a));
@@ -136,10 +190,24 @@ export function orderDataSets(scores, selection, arrangement) {
 
 }
 
+/**
+ * Compares two scores based on rank.
+ * 
+ * @param {Object} firstScore 
+ * @param {Object} secondScore 
+ * @returns value for use by array sort method.
+ */
 function compareRanks(firstScore, secondScore) {
   return ranks[firstScore.score.rank] - ranks[secondScore.score.rank];
 }
 
+/**
+ * Compares two scores based on mods.
+ * 
+ * @param {Object} firstScore 
+ * @param {Object} secondScore 
+ * @returns value for use by array sort method.
+ */
 function compareMods(firstScore, secondScore) {
   var firstScoreMods = firstScore.score.mods.split(', ');
   var secondScoreMods = secondScore.score.mods.split(', ');
